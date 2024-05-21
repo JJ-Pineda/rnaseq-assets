@@ -39,10 +39,6 @@ STAR_OUT_DIR="star_alignment"
 ARRIBA_OUT_DIR="arriba"
 mkdir $STAR_OUT_DIR $ARRIBA_OUT_DIR
 
-# Necessary for BAM sorting to proceed without error
-# Alters the open-file limit
-ulimit -n 10000
-
 # Adapted from "run_arriba.sh" script provided with Arriba installation
 # Add "--twopassMode Basic \" if you plan to do transcriptome assembly with StringTie
 # If an unsorted BAM is desired, use "--outStd BAM_Unsorted \" and "--outSAMtype BAM Unsorted \"

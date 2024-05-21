@@ -1,0 +1,26 @@
+# Create docker image from a Dockerfile in the same directory
+docker build --tag 'name of image' .
+
+# Create container from image but don't run the container
+docker create -t --name <name of container> <name of image>
+
+# Start container that has been created but isn't running
+docker start -d <name of container>
+
+# Create and start a container
+docker run -d -t --name <name of container> <name of image>
+
+# Stop a running container
+docker stop <name of container>
+
+# Transfer files from host system to EXISTING path in container
+docker cp host/path/to/file <name of container>:container/directory
+
+# Transfer files from container to host system
+docker cp <name of container>:/container/directory/ host/path/to/file
+
+# Connect to docker container via bash session
+docker exec -it <name of container> bash
+
+# For transferring multiple files to the container, put them all in the same directory, then run
+docker cp path/to/directory/. <name of container>:container/directory/

@@ -60,7 +60,7 @@ do
     IN_NAME2=$BASE_NAME$READ2_SUFFIX
 
     # Transcriptome benchmarks: 10gb seems to be sufficient
-    # Benchmark: 12 threads --> ~48 minutes for one set of paired reads
+    # Benchmark: 12 threads over 11 CPUs --> ~21 minutes for one set of paired reads (including index creation)
     bbsplit.sh -Xmx10g threads=12 build=1 path="$INDEX_PATH" in1="$IN_NAME1" in2="$IN_NAME2" basename="${BASE_NAME}_%_#.fastq.gz" refstats="${BASE_NAME}_stat.txt"
   fi
 

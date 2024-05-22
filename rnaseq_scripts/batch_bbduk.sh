@@ -5,7 +5,7 @@ READ1_SUFFIX=$2
 READ2_SUFFIX=$3
 
 SECONDS=0
-REF_PATH="/Applications/bbmap/resources/adapters.fa"
+REF_PATH="/usr/share/java/bbmap/adapters.fa"
 TRIM_TAG="_trimmed_"
 
 # Tell bash to abort on error

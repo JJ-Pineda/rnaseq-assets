@@ -10,20 +10,22 @@ SECONDS=0
 STAR_INDEX="/Users/javier/CompBioAssets/star_indices/grch38"
 GENCODE_DIR="/Users/javier/CompBioAssets/gencode_references/grch38"
 ASSEMBLY="${GENCODE_DIR}/GRCh38.primary_assembly.genome.fa.gz"
-ANNOTATION="${GENCODE_DIR}/gencode.v45.primary_assembly.annotation.gtf.gz"
+ANNOTATION="${GENCODE_DIR}/gencode.v46.primary_assembly.annotation.gtf.gz"
 ARRIBA_PATH=$(echo "$(which arriba)" | sed -r "s/\/arriba$//g")
-BLACKLIST_TSV="${ARRIBA_PATH}/database/blacklist_hg38_GRCh38_v2.4.0.tsv"
-KNOWN_FUSIONS_TSV="${ARRIBA_PATH}/database/known_fusions_hg38_GRCh38_v2.4.0.tsv"
+BLACKLIST_TSV="${ARRIBA_PATH}/database/blacklist_hg38_GRCh38_v2.4.0.tsv.gz"
+KNOWN_FUSIONS_TSV="${ARRIBA_PATH}/database/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz"
 PROTEIN_DOMAINS_GFF3="${ARRIBA_PATH}/database/protein_domains_hg38_GRCh38_v2.4.0.gff3"
 
 # Tell bash to be verbose and to abort on error
 set -o pipefail
 set -e -u
 
-# Gunzip assembly and annotation files
-gunzip -k "$ASSEMBLY" "$ANNOTATION"
+# Gunzip assembly, annotation, blacklisted fusions, and known fusions files
+gunzip -k "$ASSEMBLY" "$ANNOTATION" "$BLACKLIST_TSV" "$KNOWN_FUSIONS_TSV"
 ASSEMBLY=$(echo "$ASSEMBLY" | sed -r "s/.gz//g")
 ANNOTATION=$(echo "$ANNOTATION" | sed -r "s/.gz//g")
+BLACKLIST_TSV=$(echo "$BLACKLIST_TSV" | sed -r "s/.gz//g")
+KNOWN_FUSIONS_TSV=$(echo "KNOWN_FUSIONS_TSV" | sed -r "s/.gz//g")
 
 # Build STAR index if needed
 if [ -z "$(ls -A $STAR_INDEX)" ]
@@ -103,4 +105,4 @@ do
 done
 
 # Remove decompressed assembly/annotation files
-rm "$ASSEMBLY" "$ANNOTATION"
+rm "$ASSEMBLY" "$ANNOTATION" "$BLACKLIST_TSV" "$KNOWN_FUSIONS_TSV"

@@ -14,9 +14,9 @@ SECONDS=0
 
 # For reference: https://github.com/BioInfoTools/BBMap/blob/master/sh/bbsplit.sh
 # Path to GENCODE files
-HUMAN_PATH=/Users/javier/CompBioAssets/gencode_references/grch38
-MOUSE_PATH=/Users/javier/CompBioAssets/gencode_references/grcm39
-INDEX_PATH=/Users/javier/CompBioAssets/bbsplit_indices/grch38_grcm39
+HUMAN_PATH=/root/gencode_references/grch38
+MOUSE_PATH=/root/gencode_references/grcm39
+INDEX_PATH=/root/indexes/bbsplit/grch38_grcm39
 
 # Tell bash to abort on error
 set -o pipefail
@@ -25,7 +25,7 @@ set -e -u
 if [ -z "$METHOD" ] || [ $METHOD = "t" ]
 then
   REF_X="${HUMAN_PATH}/gencode.v46.transcripts.fa.gz"
-  REF_Y="${MOUSE_PATH}/gencode.vM34.transcripts.fa.gz"
+  REF_Y="${MOUSE_PATH}/gencode.vM35.transcripts.fa.gz"
 else
   REF_X="${HUMAN_PATH}/GRCh38.primary_assembly.genome.fa.gz"
   REF_Y="${MOUSE_PATH}/GRCm39.primary_assembly.genome.fa.gz"
@@ -37,7 +37,7 @@ ulimit -n 10000
 # Build BBSplit index (<5 minutes)
 # Note: uses ~22gb of storage for a genome-based human index (much smaller for transcriptome-based)
 #bbsplit.sh -Xmx50g threads=12 build=1 path="$INDEX_PATH" ref_x="$REF_X" ref_y="$REF_Y"
-bbsplit.sh -Xmx50g threads=12 build=1 path="$INDEX_PATH" ref_x="$REF_X" ref_y="$REF_Y"
+bbsplit.sh -Xmx10g threads=12 build=1 path="$INDEX_PATH" ref_x="$REF_X" ref_y="$REF_Y"
 
 # Perform the actual read splitting
 cd "$FASTQ_DIR"

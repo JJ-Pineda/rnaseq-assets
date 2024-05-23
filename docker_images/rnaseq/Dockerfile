@@ -19,8 +19,8 @@ RUN wget -nv 'https://github.com/suhrig/arriba/releases/download/v2.4.0/arriba_v
 
 RUN cd arriba_v2.4.0 && make
 
-RUN echo 'PATH="$PATH:/arriba_v2.4.0/"' > ~/.bashrc
-RUN echo 'PATH="$PATH:/usr/share/bbmap/"' > ~/.bashrc
+RUN echo 'export PATH="$PATH:/arriba_v2.4.0/"' > ~/.bashrc
+RUN echo 'export PATH="$PATH:/usr/share/bbmap/"' >> ~/.bashrc
 
 RUN cd /usr/share/java && unzip -d bbmap bbmap.jar
 

@@ -25,7 +25,7 @@ gunzip -k "$ASSEMBLY" "$ANNOTATION" "$BLACKLIST_TSV" "$KNOWN_FUSIONS_TSV"
 ASSEMBLY=$(echo "$ASSEMBLY" | sed -r "s/.gz//g")
 ANNOTATION=$(echo "$ANNOTATION" | sed -r "s/.gz//g")
 BLACKLIST_TSV=$(echo "$BLACKLIST_TSV" | sed -r "s/.gz//g")
-KNOWN_FUSIONS_TSV=$(echo "KNOWN_FUSIONS_TSV" | sed -r "s/.gz//g")
+KNOWN_FUSIONS_TSV=$(echo "$KNOWN_FUSIONS_TSV" | sed -r "s/.gz//g")
 
 # Build STAR index if needed
 if [ -z "$(ls -A $STAR_INDEX)" ]

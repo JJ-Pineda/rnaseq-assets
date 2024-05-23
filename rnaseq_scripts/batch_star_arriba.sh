@@ -32,6 +32,7 @@ if [ -z "$(ls -A $STAR_INDEX)" ]
 then
   echo "No STAR index detected --> building STAR index"
   STAR --runThreadN 8 --runMode genomeGenerate --genomeDir "$STAR_INDEX" --genomeFastaFiles "$ASSEMBLY" --sjdbGTFfile "$ANNOTATION" --sjdbOverhang 100
+  echo "Finished building STAR index"
 fi
 
 cd "$FASTQ_DIR"

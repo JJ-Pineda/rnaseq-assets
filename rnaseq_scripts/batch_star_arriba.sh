@@ -7,11 +7,11 @@ READ2_SUFFIX=$4
 
 SECONDS=0
 
-STAR_INDEX="/Users/javier/CompBioAssets/star_indices/grch38"
-GENCODE_DIR="/Users/javier/CompBioAssets/gencode_references/grch38"
+STAR_INDEX="/root/indexes/star/grch38"
+GENCODE_DIR="/root/gencode_references/grch38"
 ASSEMBLY="${GENCODE_DIR}/GRCh38.primary_assembly.genome.fa.gz"
 ANNOTATION="${GENCODE_DIR}/gencode.v46.primary_assembly.annotation.gtf.gz"
-ARRIBA_PATH=$(echo "$(which arriba)" | sed -r "s/\/arriba$//g")
+ARRIBA_PATH=$(echo "$(type -p arriba)" | sed -r "s/\/arriba$//g")
 BLACKLIST_TSV="${ARRIBA_PATH}/database/blacklist_hg38_GRCh38_v2.4.0.tsv.gz"
 KNOWN_FUSIONS_TSV="${ARRIBA_PATH}/database/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz"
 PROTEIN_DOMAINS_GFF3="${ARRIBA_PATH}/database/protein_domains_hg38_GRCh38_v2.4.0.gff3"

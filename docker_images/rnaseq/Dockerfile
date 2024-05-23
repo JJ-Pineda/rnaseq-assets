@@ -24,5 +24,9 @@ RUN echo 'export PATH="$PATH:/usr/share/bbmap/"' >> ~/.bashrc
 
 RUN cd /usr/share/java && unzip -d bbmap bbmap.jar
 
-RUN cd && mkdir data scripts gencode_references
+RUN cd && mkdir data scripts gencode_references indexes
 RUN cd gencode_references && mkdir grch38 grcm39
+RUN cd /root/indexes && mkdir star bbsplit salmon
+RUN cd /root/indexes/star && mkdir grch38
+RUN cd /root/indexes/bbsplit && mkdir grch38_grcm39
+RUN cd /root/indexes/salmon && mkdir grch38

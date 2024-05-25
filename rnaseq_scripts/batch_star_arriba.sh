@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# If only STAR index creation desired, run script with no specified arguments
 TWO_PASS_MODE=$1   # "None" or "Basic"
 FASTQ_DIR=$2
 READ1_SUFFIX=$3
@@ -33,6 +34,11 @@ then
   echo "No STAR index detected --> building STAR index"
   STAR --runThreadN 8 --runMode genomeGenerate --genomeDir "$STAR_INDEX" --genomeFastaFiles "$ASSEMBLY" --sjdbGTFfile "$ANNOTATION" --sjdbOverhang 100
   echo "Finished building STAR index"
+fi
+
+if [ -z "$FASTQ_DIR" ]
+then
+  exit
 fi
 
 cd "$FASTQ_DIR"

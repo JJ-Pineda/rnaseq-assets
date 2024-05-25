@@ -22,22 +22,19 @@ INDEX_PATH=/root/indexes/bbsplit/grch38_grcm39
 set -o pipefail
 set -e -u
 
+# Build BBSplit index (<5 minutes)
+# Note: uses ~22gb of storage for a genome-based human index (much smaller for transcriptome-based)
 if [ -z "$METHOD" ] || [ $METHOD = "t" ]
 then
   REF_X="${HUMAN_PATH}/gencode.v46.transcripts.fa.gz"
   REF_Y="${MOUSE_PATH}/gencode.vM35.transcripts.fa.gz"
+  bbsplit.sh -Xmx10g threads=12 build=1 path="$INDEX_PATH" ref_x="$REF_X" ref_y="$REF_Y"
 else
+  # Note: "maxindel" parameter set to "200k" when performing for genome sequencing
   REF_X="${HUMAN_PATH}/GRCh38.primary_assembly.genome.fa.gz"
   REF_Y="${MOUSE_PATH}/GRCm39.primary_assembly.genome.fa.gz"
+  bbsplit.sh -Xmx50g threads=12 build=1 maxindel=200k path="$INDEX_PATH" ref_x="$REF_X" ref_y="$REF_Y"
 fi
-
-# Alters the open-file limit
-ulimit -n 10000
-
-# Build BBSplit index (<5 minutes)
-# Note: uses ~22gb of storage for a genome-based human index (much smaller for transcriptome-based)
-#bbsplit.sh -Xmx50g threads=12 build=1 path="$INDEX_PATH" ref_x="$REF_X" ref_y="$REF_Y"
-bbsplit.sh -Xmx10g threads=12 build=1 path="$INDEX_PATH" ref_x="$REF_X" ref_y="$REF_Y"
 
 # Perform the actual read splitting
 cd "$FASTQ_DIR"

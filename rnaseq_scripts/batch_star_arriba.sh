@@ -1,10 +1,11 @@
 #!/bin/bash
 
 # If only STAR index creation desired, run script with no specified arguments
-TWO_PASS_MODE=$1   # "None" or "Basic"
-FASTQ_DIR=$2
-READ1_SUFFIX=$3
-READ2_SUFFIX=$4
+# If performing downstream transcriptome assembly, specify "Basic" for "TWO_PASS_MODE"
+FASTQ_DIR=$1
+READ1_SUFFIX=$2
+READ2_SUFFIX=$3
+TWO_PASS_MODE=$4   # "None" or "Basic"
 
 SECONDS=0
 
@@ -36,11 +37,6 @@ then
   echo "Finished building STAR index"
 fi
 
-if [ -z "$FASTQ_DIR" ]
-then
-  exit
-fi
-
 cd "$FASTQ_DIR"
 
 # Create directories for STAR and Arriba
@@ -50,7 +46,6 @@ mkdir $STAR_OUT_DIR $ARRIBA_OUT_DIR
 
 # Adapted from "run_arriba.sh" script provided with Arriba installation
 # Add "--twopassMode Basic \" if you plan to do transcriptome assembly with StringTie
-# If an unsorted BAM is desired, use "--outStd BAM_Unsorted \" and "--outSAMtype BAM Unsorted \"
 echo "Will use \"--twopassMode $TWO_PASS_MODE\" for STAR alignment"
 
 READ1_FILES=$(ls *$READ1_SUFFIX)
@@ -106,6 +101,18 @@ do
 	-k "$KNOWN_FUSIONS_TSV" \
 	-t "$KNOWN_FUSIONS_TSV" \
 	-p "$PROTEIN_DOMAINS_GFF3"
+
+  # Filter and sort BAM files
+  if [[ "$TWO_PASS_MODE" == "Basic"  ]]
+  then
+    sambamba view -F "not chimeric" -f bam --compression-level=0 "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.out.bam" |
+    sambamba sort --compression-level=0 -o "${STAR_OUT_DIR}/${BASE_NAME}_Filtered_Sorted.out.bam" /dev/stdin
+  fi
+
+  sambamba sort --compression-level=0 -o "${STAR_OUT_DIR}/${BASE_NAME}_Sorted.toTranscriptome.out.bam" "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam"
+
+  # Free up disk space
+  rm "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.out.bam" "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam"
 
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

@@ -106,10 +106,10 @@ do
   if [[ "$TWO_PASS_MODE" == "Basic"  ]]
   then
     sambamba view -F "not chimeric" -f bam --compression-level=0 "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.out.bam" |
-    sambamba sort --compression-level=0 -o "${STAR_OUT_DIR}/${BASE_NAME}_Filtered_Sorted.out.bam" /dev/stdin
+    sambamba sort --compression-level=6 -o "${STAR_OUT_DIR}/${BASE_NAME}_Filtered_Sorted.out.bam" /dev/stdin
   fi
 
-  sambamba sort --compression-level=0 -o "${STAR_OUT_DIR}/${BASE_NAME}_Sorted.toTranscriptome.out.bam" "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam"
+  sambamba sort --compression-level=6 -o "${STAR_OUT_DIR}/${BASE_NAME}_Sorted.toTranscriptome.out.bam" "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam"
 
   # Free up disk space
   rm "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.out.bam" "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam"

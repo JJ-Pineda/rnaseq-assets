@@ -105,10 +105,12 @@ do
   # Filter and sort BAM files
   if [[ "$TWO_PASS_MODE" == "Basic"  ]]
   then
+    echo "Filtering and sorting genomics coordinate BAM file"
     sambamba view -F "not chimeric" -f bam --compression-level=0 "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.out.bam" |
     sambamba sort --compression-level=6 -o "${STAR_OUT_DIR}/${BASE_NAME}_Filtered_Sorted.out.bam" /dev/stdin
   fi
 
+  echo "Filtering and sorting transcriptomics coordinate BAM file"
   sambamba view -F "not chimeric" -f bam --compression-level=0 "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam" |
   sambamba sort --compression-level=6 -o "${STAR_OUT_DIR}/${BASE_NAME}_Filtered_Sorted.toTranscriptome.out.bam" /dev/stdin
 

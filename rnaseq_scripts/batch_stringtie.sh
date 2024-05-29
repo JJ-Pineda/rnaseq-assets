@@ -5,15 +5,27 @@ BAM_SUFFIX=$2
 
 SECONDS=0
 
-ANNOTATION="/root/gencode_references/grch38/gencode.v46.primary_assembly.annotation.gtf.gz"
+GENCODE_DIR="/root/gencode_references/grch38"
+GENCODE_FILE="gencode.v46.primary_assembly.annotation.gtf.gz"
 
 # Tell bash to abort on error
 set -o pipefail
 set -e -u
 
 # Gunzip annotation
-gunzip -k "$ANNOTATION"
-ANNOTATION=$(echo "$ANNOTATION" | sed -r "s/.gz//g")
+cd "$GENCODE_DIR"
+gunzip -k "$GENCODE_FILE"
+GENCODE_FILE=$(echo "$GENCODE_FILE" | sed -r "s/.gz//g")
+
+# Remove header info from reference GTF
+echo "test 1"
+FIRST_LINE=$(grep -n "chr1" "$GENCODE_FILE" | head -n 1 | cut -d: -f1)
+echo "test 2"
+tail -n "+$FIRST_LINE" "$GENCODE_FILE" > "truncated_gencode_annotation.gtf"
+echo "test 3"
+mv "truncated_gencode_annotation.gtf" "$GENCODE_FILE"
+echo "test 4"
+ANNOTATION="${GENCODE_DIR}/${GENCODE_FILE}"
 
 cd "$BAM_DIR"
 BAM_FILES=$(ls *$BAM_SUFFIX)

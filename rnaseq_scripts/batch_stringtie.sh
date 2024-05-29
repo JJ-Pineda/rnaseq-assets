@@ -26,7 +26,7 @@ do
 done
 
 # Merge StringTie outputs
-STRINGTIE_FILES=$(ls *stringtie.gtf | tr '\n' ' ')
+STRINGTIE_FILES=$(ls *stringtie.gtf | tr '\n' ' ' | xargs)
 stringtie -G "$ANNOTATION" -o "stringtie_transcriptome.gtf" "$STRINGTIE_FILES"
 
 # Remove decompressed annotation file and intermediate stringtie GTF files

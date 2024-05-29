@@ -74,6 +74,7 @@ do
     --outStd BAM_Unsorted \
     --outSAMtype BAM Unsorted \
     --outSAMunmapped Within \
+    --outSAMstrandField intronMotif \
     --outBAMcompression 0 \
     --outFilterMultimapNmax 50 \
     --outFileNamePrefix "${STAR_OUT_DIR}/${BASE_NAME}_" \

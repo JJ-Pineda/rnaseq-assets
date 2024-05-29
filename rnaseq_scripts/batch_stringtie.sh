@@ -22,7 +22,7 @@ for f in $BAM_FILES
 do
   BASE_NAME="${f//$BAM_SUFFIX/}"
   echo "Assembling transcriptome for $BASE_NAME"
-  stringtie -G "$ANNOTATION" -o "${BASE_NAME}_stringtie.gtf" "$f"
+  stringtie -p 8 -G "$ANNOTATION" -o "${BASE_NAME}_stringtie.gtf" "$f"
 done
 
 # Merge StringTie outputs

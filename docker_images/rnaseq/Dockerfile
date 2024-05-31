@@ -4,6 +4,7 @@ RUN apt update && \
     apt install -y --no-install-recommends \
         fastqc \
         multiqc \
+        samtools \
         sambamba \
         bbmap \
         rna-star \

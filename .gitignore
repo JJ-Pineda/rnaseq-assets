@@ -1,5 +1,6 @@
 .idea/
 .DS_Store
-sample_data/
+ensembl_references/
 gencode_references/
 indexes/
+sample_data/

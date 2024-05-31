@@ -10,9 +10,9 @@ TWO_PASS_MODE=$4   # "None" or "Basic"
 SECONDS=0
 
 STAR_INDEX="/root/indexes/star/grch38"
-GENCODE_DIR="/root/gencode_references/grch38"
-ASSEMBLY="${GENCODE_DIR}/GRCh38.primary_assembly.genome.fa.gz"
-ANNOTATION="${GENCODE_DIR}/gencode.v46.primary_assembly.annotation.gtf.gz"
+REFERENCE_DIR="/root/gencode_references/grch38"
+ASSEMBLY="${REFERENCE_DIR}/GRCh38.primary_assembly.genome.fa.gz"
+ANNOTATION="${REFERENCE_DIR}/gencode.v46.primary_assembly.annotation.gtf.gz"
 ARRIBA_PATH=$(echo "$(type -p arriba)" | sed -r "s/\/arriba$//g")
 BLACKLIST_TSV="${ARRIBA_PATH}/database/blacklist_hg38_GRCh38_v2.4.0.tsv.gz"
 KNOWN_FUSIONS_TSV="${ARRIBA_PATH}/database/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz"

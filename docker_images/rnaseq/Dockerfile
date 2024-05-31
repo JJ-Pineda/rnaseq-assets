@@ -4,10 +4,11 @@ RUN apt update && \
     apt install -y --no-install-recommends \
         fastqc \
         multiqc \
-        samtools \
         sambamba \
         bbmap \
         rna-star \
+        dialog \
+        hisat2 \
         stringtie \
         salmon \
         rsem \
@@ -31,3 +32,4 @@ RUN cd /root/indexes && mkdir star bbsplit salmon
 RUN cd /root/indexes/star && mkdir grch38
 RUN cd /root/indexes/bbsplit && mkdir grch38_grcm39
 RUN cd /root/indexes/salmon && mkdir grch38
+RUN cd /root/indexes/hisat2 && mkdir grch38

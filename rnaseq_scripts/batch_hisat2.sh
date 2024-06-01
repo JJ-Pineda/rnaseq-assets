@@ -36,7 +36,8 @@ do
 
   # "--dta" is short for "--downstream-transcriptome-assembly" (i.e. StringTie)
   hisat2 -q -p 8 --rna-strandness "$STRANDEDNESS" -x "$HISAT2_INDEX" $READ_ARGUMENT --dta |
-  sambamba sort --compression-level=6 -o "${FASTQ_DIR}/hisat2/${BASE_NAME}_Sorted.bam" /dev/stdin
+  sambamba view --sam-input --format bam --compression-level=0 /dev/stdin |
+  sambamba sort -t 8 -o "${FASTQ_DIR}/hisat2/${BASE_NAME}_Sorted.bam" --compression-level=6 /dev/stdin
 
   # Remove decompressed read files
   rm "$BASE_NAME$READ1_SUFFIX" "$BASE_NAME$READ2_SUFFIX"

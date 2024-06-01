@@ -5,7 +5,7 @@ BAM_SUFFIX=$2
 
 SECONDS=0
 
-ANNOTATION="/root/gencode_references/grch38/gencode.v46.primary_assembly.annotation.gtf.gz"
+ANNOTATION="/root/ensemble_references/grch38/Homo_sapiens.GRCh38.112.gtf.gz"
 
 # Tell bash to abort on error
 set -o pipefail
@@ -15,14 +15,14 @@ set -e -u
 gunzip -k "$ANNOTATION"
 ANNOTATION=$(echo "$ANNOTATION" | sed -r "s/.gz//g")
 
-# Remove GTF header lines
-SKIP_LINES=$(grep -E '^#!' "$ANNOTATION" | wc -l)
-START_LINE=$(echo `expr $SKIP_LINES + 1`)
-tail -n "+$START_LINE" $ANNOTATION > no_header.gtf
-mv no_header.gtf $ANNOTATION
+# # Remove GTF header lines
+# SKIP_LINES=$(grep -E '^#!' "$ANNOTATION" | wc -l)
+# START_LINE=$(echo `expr $SKIP_LINES + 1`)
+# tail -n "+$START_LINE" $ANNOTATION > no_header.gtf
+# mv no_header.gtf $ANNOTATION
 
-# Remove "chr" prefix from all chromosomes in GTF
-sed -i -E 's/chr([0-9]+)/\1/g' "$ANNOTATION"
+# # Remove "chr" prefix from all chromosomes in GTF
+# sed -i -E 's/chr([0-9]+)/\1/g' "$ANNOTATION"
 
 # Perform actual transcriptome assembly
 cd "$BAM_DIR"

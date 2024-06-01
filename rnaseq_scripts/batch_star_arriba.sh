@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # If only STAR index creation desired, run script with no specified arguments
-# If performing downstream transcriptome assembly, specify "Basic" for "TWO_PASS_MODE"
+# We are assuming that no downstream transcriptome assembly will be performed
+# If downstream transcriptome assembly is desired, use HISAT2 for alignment
 FASTQ_DIR=$1
 READ1_SUFFIX=$2
 READ2_SUFFIX=$3
-TWO_PASS_MODE=$4   # "None" or "Basic"
 
 SECONDS=0
 
@@ -35,6 +35,12 @@ then
   echo "No STAR index detected --> building STAR index"
   STAR --runThreadN 8 --runMode genomeGenerate --genomeDir "$STAR_INDEX" --genomeFastaFiles "$ASSEMBLY" --sjdbGTFfile "$ANNOTATION" --sjdbOverhang 100
   echo "Finished building STAR index"
+fi
+
+if [ -z "$FASTQ_DIR" ]
+then
+  echo "No FASTQ directory provided...Exiting..."
+  exit
 fi
 
 cd "$FASTQ_DIR"
@@ -69,12 +75,11 @@ do
     --genomeLoad NoSharedMemory \
     --readFilesIn $READ_FILES \
     --readFilesCommand gunzip -c \
-    --twopassMode "$TWO_PASS_MODE" \
+    --twopassMode None \
     --quantMode TranscriptomeSAM \
     --outStd BAM_Unsorted \
     --outSAMtype BAM Unsorted \
     --outSAMunmapped Within \
-    --outSAMstrandField intronMotif \
     --outBAMcompression 0 \
     --outFilterMultimapNmax 50 \
     --outFileNamePrefix "${STAR_OUT_DIR}/${BASE_NAME}_" \
@@ -90,33 +95,22 @@ do
     --chimSegmentReadGapMax 3 \
     --chimMultimapNmax 50 |
 
-  tee "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.out.bam" |
-
   arriba \
-	-x /dev/stdin \
-	-o "${ARRIBA_OUT_DIR}/${BASE_NAME}_fusions.tsv" \
-	-O "${ARRIBA_OUT_DIR}/${BASE_NAME}_fusions.discarded.tsv" \
-	-a "$ASSEMBLY" \
-	-g "$ANNOTATION" \
-	-b "$BLACKLIST_TSV" \
-	-k "$KNOWN_FUSIONS_TSV" \
-	-t "$KNOWN_FUSIONS_TSV" \
-	-p "$PROTEIN_DOMAINS_GFF3"
+	  -x /dev/stdin \
+	  -o "${ARRIBA_OUT_DIR}/${BASE_NAME}_fusions.tsv" \
+	  -O "${ARRIBA_OUT_DIR}/${BASE_NAME}_fusions.discarded.tsv" \
+	  -a "$ASSEMBLY" \
+	  -g "$ANNOTATION" \
+	  -b "$BLACKLIST_TSV" \
+	  -k "$KNOWN_FUSIONS_TSV" \
+	  -t "$KNOWN_FUSIONS_TSV" \
+	  -p "$PROTEIN_DOMAINS_GFF3"
 
-  # Filter and sort BAM files
-  if [[ "$TWO_PASS_MODE" == "Basic"  ]]
-  then
-    echo "Filtering and sorting genomics coordinate BAM file"
-    sambamba view -F "not chimeric" -f bam --compression-level=0 "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.out.bam" |
-    sambamba sort --compression-level=6 -o "${STAR_OUT_DIR}/${BASE_NAME}_Filtered_Sorted.out.bam" /dev/stdin
-  fi
-
+  # Filter and sort BAM file
   echo "Filtering and sorting transcriptomics coordinate BAM file"
   sambamba view -F "not chimeric" -f bam --compression-level=0 "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam" |
   sambamba sort --compression-level=6 -o "${STAR_OUT_DIR}/${BASE_NAME}_Filtered_Sorted.toTranscriptome.out.bam" /dev/stdin
-
-  # Free up disk space
-  rm "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.out.bam" "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam"
+  rm "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam"
 
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

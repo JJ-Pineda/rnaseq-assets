@@ -5,7 +5,7 @@ BAM_SUFFIX=$2
 
 SECONDS=0
 
-ANNOTATION="/root/ensemble_references/grch38/Homo_sapiens.GRCh38.112.gtf.gz"
+ANNOTATION="/root/ensembl_references/grch38/Homo_sapiens.GRCh38.112.gtf.gz"
 
 # Tell bash to abort on error
 set -o pipefail

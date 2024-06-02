@@ -12,13 +12,11 @@ RUN apt update && \
         salmon \
         rsem \
         subread \
-        ca-certificates wget tar gcc g++ make
+        ca-certificates wget tar
 
 RUN wget -nv https://github.com/suhrig/arriba/releases/download/v2.4.0/arriba_v2.4.0.tar.gz && \
     tar -xzf arriba_v2.4.0.tar.gz --exclude=arriba*/.git && \
     rm arriba_v2.4.0.tar.gz
-
-RUN cd arriba_v2.4.0 && make
 
 RUN wget -nv https://github.com/gpertea/stringtie/releases/download/v2.2.3/stringtie-2.2.3.Linux_x86_64.tar.gz && \
     tar -xzf stringtie-2.2.3.Linux_x86_64.tar.gz && \

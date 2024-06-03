@@ -1,6 +1,6 @@
 #!/bin/bash
 
-STRANDEDNESS=$1
+STRANDNESS=$1
 FASTQ_DIR=$2
 READ1_SUFFIX_GZ=$3
 READ2_SUFFIX_GZ=$4
@@ -35,7 +35,7 @@ do
   fi
 
   # "--dta" is short for "--downstream-transcriptome-assembly" (i.e. StringTie)
-  hisat2 -q -p 8 --rna-strandness "$STRANDEDNESS" -x "$HISAT2_INDEX" $READ_ARGUMENT --dta |
+  hisat2 -q -p 8 --rna-strandness "$STRANDNESS" -x "$HISAT2_INDEX" $READ_ARGUMENT --dta |
   sambamba view --sam-input --format bam --compression-level=0 /dev/stdin |
   sambamba sort -t 8 -o "${FASTQ_DIR}/hisat2/${BASE_NAME}_Sorted.bam" /dev/stdin
 

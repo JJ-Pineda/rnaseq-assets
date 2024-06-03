@@ -34,23 +34,23 @@ if [[ $LIB_TYPE == *"R"* ]]
 then
   if [ ! -z "$READ2_FILE" ]
   then
-    STRANDEDNESS="RF"
+    STRANDNESS="RF"
   else
-  	STRANDEDNESS="R"
+  	STRANDNESS="R"
   fi
 elif [[ $LIB_TYPE == *"F"* ]]
 then
   if [ ! -z "$READ2_FILE" ]
   then
-    STRANDEDNESS="FR"
+    STRANDNESS="FR"
   else
-  	STRANDEDNESS="F"
+  	STRANDNESS="F"
   fi
 else
-  STRANDEDNESS="Unstranded"
+  STRANDNESS="Unstranded"
 fi
 
-echo "Salmon detected the library type as '$LIBTYPE' --> Strandedness = '$STRANDEDNESS'"
+echo "Salmon detected the library type as '$LIBTYPE' --> Strandness = '$STRANDNESS'"
 
 duration=$SECONDS
 echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

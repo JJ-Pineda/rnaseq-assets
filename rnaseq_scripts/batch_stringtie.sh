@@ -2,10 +2,27 @@
 
 BAM_DIR=$1
 BAM_SUFFIX=$2
+STRANDNESS=$3
+ENSEMBL_DIR=$4
 
 SECONDS=0
 
-ANNOTATION="/root/ensembl_references/grch38/Homo_sapiens.GRCh38.112.gtf.gz"
+if [ -z "$STRANDNESS" ]
+then
+  STRANDNESS=""
+fi
+
+if [ -z "$ENSEMBL_DIR" ]
+then
+  ENSEMBL_DIR="/root/ensembl_references/grch38"
+fi
+
+if [ -z "$ENSEMBL_DIR" ]
+then
+  ENSEMBL_DIR="/root/ensembl_references/grch38"
+fi
+
+ANNOTATION=${ENSEMBL_DIR}/$(cd "$ENSEMBL_DIR" && ls *gtf.gz)
 
 # Tell bash to abort on error
 set -o pipefail
@@ -32,7 +49,7 @@ for f in $BAM_FILES
 do
   BASE_NAME="${f//$BAM_SUFFIX/}"
   echo "Assembling transcriptome for $BASE_NAME"
-  stringtie -p 8 -G "$ANNOTATION" -o "${BASE_NAME}_stringtie.gtf" --rf "$f"
+  stringtie -p 8 -G "$ANNOTATION" -o "${BASE_NAME}_stringtie.gtf" $STRANDNESS "$f"
 done
 
 # Merge StringTie outputs

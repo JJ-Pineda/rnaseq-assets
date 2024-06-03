@@ -1,13 +1,20 @@
 #!/bin/bash
 
-STRANDNESS=$1
-FASTQ_DIR=$2
-READ1_SUFFIX=$3
-READ2_SUFFIX=$4
+HISAT2_INDEX=$1
+STRANDNESS=$2   # Set to empty string (i.e. "") if unstranded
+FASTQ_DIR=$3
+READ1_SUFFIX=$4
+READ2_SUFFIX=$5 # Leave blank for single-end reads
+
+# Ensure that HISAT2 index exists
+cd "$HISAT2_INDEX"
+if [ -z $(ls) ]
+then
+  echo "No HISAT2 index detected. Exiting..."
+  exit
+fi
 
 SECONDS=0
-
-HISAT2_INDEX="/root/indexes/hisat2/grch38/genome"
 
 # Tell bash to abort on error
 set -o pipefail

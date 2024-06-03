@@ -40,7 +40,12 @@ do
   sambamba sort -t 8 -o "${FASTQ_DIR}/hisat2/${BASE_NAME}_Sorted.bam" /dev/stdin
 
   # Remove decompressed read files
-  rm "$BASE_NAME$READ1_SUFFIX" "$BASE_NAME$READ2_SUFFIX"
+  if [ -z "$READ2_SUFFIX_GZ" ]
+  then
+    rm "$BASE_NAME$READ1_SUFFIX"
+  else
+    rm "$BASE_NAME$READ1_SUFFIX" "$BASE_NAME$READ2_SUFFIX"
+  fi
 
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

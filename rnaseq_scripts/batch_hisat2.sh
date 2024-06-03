@@ -13,6 +13,14 @@ HISAT2_INDEX="/root/indexes/hisat2/grch38/genome"
 set -o pipefail
 set -e -u
 
+if [ -z "$STRANDNESS" ]
+then
+  STRANDNESS_ARG=""
+else
+  STRANDNESS_ARG="--rna-strandness $STRANDNESS"
+fi
+
+
 cd "$FASTQ_DIR"
 mkdir hisat2
 
@@ -31,7 +39,7 @@ do
   fi
 
   # "--dta" is short for "--downstream-transcriptome-assembly" (i.e. StringTie)
-  hisat2 -q -p 8 --rna-strandness "$STRANDNESS" -x "$HISAT2_INDEX" $READ_ARGUMENT --remove-chrname --dta |
+  hisat2 -q -p 8 $STRANDNESS_ARG -x "$HISAT2_INDEX" $READ_ARGUMENT --dta |
   sambamba view --sam-input --format bam --compression-level=0 /dev/stdin |
   sambamba sort -t 8 -o "${FASTQ_DIR}/hisat2/${BASE_NAME}_Sorted.bam" /dev/stdin
 

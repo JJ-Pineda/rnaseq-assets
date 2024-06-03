@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Tell bash to abort on error
+set -o pipefail
+set -e -u
+
 # "grch38" or "grcm39"
 GENOME=$1
 
@@ -9,10 +13,6 @@ REF_DIR="/root/ensembl_references/$GENOME"
 mkdir "$STAR_INDEX"
 
 SECONDS=0
-
-# Tell bash to abort on error
-set -o pipefail
-set -e -u
 
 ASSEMBLY=${REF_DIR}/$(cd "$REF_DIR" && ls *primary_assembly.fa.gz)
 ANNOTATION=${REF_DIR}/$(cd "$REF_DIR" && ls *gtf.gz)

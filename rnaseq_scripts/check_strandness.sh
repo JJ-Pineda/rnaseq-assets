@@ -1,14 +1,14 @@
 #!/bin/bash
 
+# Tell bash to abort on error
+set -o pipefail
+set -e -u
+
 FASTQ_DIR=$1
 READ1_FILE=$2
 READ2_FILE=$3
 
 SECONDS=0
-
-# Tell bash to abort on error
-set -o pipefail
-set -e -u
 
 cd "$FASTQ_DIR"
 

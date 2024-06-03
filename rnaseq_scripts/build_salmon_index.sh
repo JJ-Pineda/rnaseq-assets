@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Tell bash to abort on error
+set -o pipefail
+set -e -u
+
 # "grch38" or "grcm39"
 GENOME=$1
 
@@ -7,10 +11,6 @@ INDEX_DIR="/root/indexes/salmon"
 REF_DIR="/root/ensembl_references/$GENOME"
 
 SECONDS=0
-
-# Tell bash to abort on error
-set -o pipefail
-set -e -u
 
 cd "$REF_DIR"
 

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Tell bash to abort on error
+set -o pipefail
+set -e -u
+
 # Here we are assuming that no downstream transcriptome assembly will be performed
 # This script has also been written for human samples
 STAR_INDEX=$1
@@ -24,10 +28,6 @@ ARRIBA_PATH=$(echo "$(type -p arriba)" | sed -r "s/\/arriba$//g")
 BLACKLIST_TSV="${ARRIBA_PATH}/database/blacklist_hg38_GRCh38_v2.4.0.tsv.gz"
 KNOWN_FUSIONS_TSV="${ARRIBA_PATH}/database/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz"
 PROTEIN_DOMAINS_GFF3="${ARRIBA_PATH}/database/protein_domains_hg38_GRCh38_v2.4.0.gff3"
-
-# Tell bash to abort on error
-set -o pipefail
-set -e -u
 
 # Gunzip assembly, annotation, blacklisted fusions, and known fusions files
 gunzip -k "$ASSEMBLY" "$ANNOTATION" "$BLACKLIST_TSV" "$KNOWN_FUSIONS_TSV"

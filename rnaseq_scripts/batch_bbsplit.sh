@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Tell bash to abort on error
+set -o pipefail
+set -e -u
+
 FASTQ_DIR=$1
 READ1_SUFFIX=$2
 READ2_SUFFIX=$3
@@ -19,10 +23,6 @@ MOUSE_PATH=/root/ensembl_references/grcm39
 INDEX_PATH=/root/indexes/bbsplit/grch38_grcm39
 
 mkdir "$INDEX_PATH"
-
-# Tell bash to abort on error
-set -o pipefail
-set -e -u
 
 # Build BBSplit index (<5 minutes)
 # Note: uses ~22gb of storage for a genome-based human index (much smaller for transcriptome-based)

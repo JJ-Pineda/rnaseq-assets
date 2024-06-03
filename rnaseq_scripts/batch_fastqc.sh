@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Tell bash to abort on error
+set -o pipefail
+set -e -u
+
 FASTQ_DIR=$1
 FASTQ_SUFFIX=$2
 OUTPUT_FOLDER=$3
@@ -10,10 +14,6 @@ if [ -z "$FASTQ_DIR" ] || [ -z "$FASTQ_SUFFIX" ] || [ -z "$OUTPUT_FOLDER" ]; the
 fi
 
 SECONDS=0
-
-# Tell bash to abort on error
-set -o pipefail
-set -e -u
 
 cd "$FASTQ_DIR"
 mkdir "$OUTPUT_FOLDER"

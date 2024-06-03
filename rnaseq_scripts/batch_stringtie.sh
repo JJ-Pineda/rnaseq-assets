@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Tell bash to abort on error
+set -o pipefail
+set -e -u
+
 BAM_DIR=$1
 BAM_SUFFIX=$2
 STRANDNESS=$3
@@ -23,10 +27,6 @@ then
 fi
 
 ANNOTATION=${ENSEMBL_DIR}/$(cd "$ENSEMBL_DIR" && ls *gtf.gz)
-
-# Tell bash to abort on error
-set -o pipefail
-set -e -u
 
 # Unzip GTF
 gunzip -k "$ANNOTATION"

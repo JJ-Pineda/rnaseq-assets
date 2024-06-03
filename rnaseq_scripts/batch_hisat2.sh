@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Tell bash to abort on error
+set -o pipefail
+set -e -u
+
 HISAT2_INDEX=$1
 STRANDNESS=$2   # Set to empty string (i.e. "") if unstranded
 FASTQ_DIR=$3
@@ -15,10 +19,6 @@ then
 fi
 
 SECONDS=0
-
-# Tell bash to abort on error
-set -o pipefail
-set -e -u
 
 if [ -z "$STRANDNESS" ]
 then

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Tell bash to abort on error
+set -o pipefail
+set -e -u
+
 FASTQ_DIR=$1
 READ1_SUFFIX=$2
 READ2_SUFFIX=$3
@@ -7,10 +11,6 @@ READ2_SUFFIX=$3
 SECONDS=0
 REF_PATH="/usr/share/java/bbmap/adapters.fa"
 TRIM_TAG="_trimmed_"
-
-# Tell bash to abort on error
-set -o pipefail
-set -e -u
 
 # Don't trim reads that have already been trimmed
 cd "$FASTQ_DIR"

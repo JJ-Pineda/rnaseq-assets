@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Tell bash to abort on error
+set -o pipefail
+set -e -u
+
 GENOME=$1
 ENSEMBL_RELEASE=$2
 

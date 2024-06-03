@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Tell bash to abort on error
+set -o pipefail
+set -e -u
+
 SALMON_INDEX=$1
 FASTQ_DIR=$2
 READ1_SUFFIX=$3
@@ -14,10 +18,6 @@ then
 fi
 
 SECONDS=0
-
-# Tell bash to abort on error
-set -o pipefail
-set -e -u
 
 # Grab files
 cd "$FASTQ_DIR"

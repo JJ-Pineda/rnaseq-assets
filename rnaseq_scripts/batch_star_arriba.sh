@@ -1,18 +1,25 @@
 #!/bin/bash
 
-# If only STAR index creation desired, run script with no specified arguments
-# We are assuming that no downstream transcriptome assembly will be performed
-# If downstream transcriptome assembly is desired, use HISAT2 for alignment
-FASTQ_DIR=$1
-READ1_SUFFIX=$2
-READ2_SUFFIX=$3
+# Here we are assuming that no downstream transcriptome assembly will be performed
+# This script has also been written for human samples
+STAR_INDEX=$1
+FASTQ_DIR=$2
+READ1_SUFFIX=$3
+READ2_SUFFIX=$4
+
+# Ensure that STAR index exists
+cd "$STAR_INDEX"
+if [ -z $(ls) ]
+then
+  echo "No STAR index detected. Exiting..."
+  exit
+fi
 
 SECONDS=0
 
-STAR_INDEX="/root/indexes/star/grch38"
-REFERENCE_DIR="/root/gencode_references/grch38"
-ASSEMBLY="${REFERENCE_DIR}/GRCh38.primary_assembly.genome.fa.gz"
-ANNOTATION="${REFERENCE_DIR}/gencode.v46.primary_assembly.annotation.gtf.gz"
+REF_DIR="/root/ensembl_references/grch38"
+ASSEMBLY=${REF_DIR}/$(cd "$REF_DIR" && ls *primary_assembly.fa.gz)
+ANNOTATION=${REF_DIR}/$(cd "REF_DIR" && ls *gtf.gz)
 ARRIBA_PATH=$(echo "$(type -p arriba)" | sed -r "s/\/arriba$//g")
 BLACKLIST_TSV="${ARRIBA_PATH}/database/blacklist_hg38_GRCh38_v2.4.0.tsv.gz"
 KNOWN_FUSIONS_TSV="${ARRIBA_PATH}/database/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz"
@@ -29,20 +36,6 @@ ANNOTATION=$(echo "$ANNOTATION" | sed -r "s/.gz//g")
 BLACKLIST_TSV=$(echo "$BLACKLIST_TSV" | sed -r "s/.gz//g")
 KNOWN_FUSIONS_TSV=$(echo "$KNOWN_FUSIONS_TSV" | sed -r "s/.gz//g")
 
-# Build STAR index if needed
-if [ -z "$(ls -A $STAR_INDEX)" ]
-then
-  echo "No STAR index detected --> building STAR index"
-  STAR --runThreadN 8 --runMode genomeGenerate --genomeDir "$STAR_INDEX" --genomeFastaFiles "$ASSEMBLY" --sjdbGTFfile "$ANNOTATION" --sjdbOverhang 100
-  echo "Finished building STAR index"
-fi
-
-if [ -z "$FASTQ_DIR" ]
-then
-  echo "No FASTQ directory provided...Exiting..."
-  exit
-fi
-
 cd "$FASTQ_DIR"
 
 # Create directories for STAR and Arriba
@@ -51,7 +44,7 @@ ARRIBA_OUT_DIR="arriba"
 mkdir $STAR_OUT_DIR $ARRIBA_OUT_DIR
 
 # Adapted from "run_arriba.sh" script provided with Arriba installation
-# Add "--twopassMode Basic \" if you plan to do transcriptome assembly with StringTie
+# Add "--twopassMode Basic \" and "--outSAMstrandField intronMotif" if you plan to do transcriptome assembly with StringTie
 echo "Will use \"--twopassMode $TWO_PASS_MODE\" for STAR alignment"
 
 READ1_FILES=$(ls *$READ1_SUFFIX)

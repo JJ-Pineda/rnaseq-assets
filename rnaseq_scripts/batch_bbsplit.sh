@@ -18,6 +18,8 @@ HUMAN_PATH=/root/ensembl_references/grch38
 MOUSE_PATH=/root/ensembl_references/grcm39
 INDEX_PATH=/root/indexes/bbsplit/grch38_grcm39
 
+mkdir "$INDEX_PATH"
+
 # Tell bash to abort on error
 set -o pipefail
 set -e -u

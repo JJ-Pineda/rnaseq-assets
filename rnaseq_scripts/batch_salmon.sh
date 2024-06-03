@@ -1,27 +1,23 @@
 #!/bin/bash
 
-FASTQ_DIR=$1
-READ1_SUFFIX=$2
-READ2_SUFFIX=$3  # Leave blank for single-end reads
+SALMON_INDEX=$1
+FASTQ_DIR=$2
+READ1_SUFFIX=$3
+READ2_SUFFIX=$4  # Leave blank for single-end reads
+
+# Ensure that Salmon index exists
+cd "$SALMON_INDEX"
+if [ -z $(ls) ]
+then
+  echo "No Salmon index detected. Exiting..."
+  exit
+fi
 
 SECONDS=0
 
 # Tell bash to abort on error
 set -o pipefail
 set -e -u
-
-# Check for Salmon index
-INDEX_PATH="/root/indexes/salmon"
-cd "$INDEX_PATH"
-
-# Build Salmon index if needed
-if [ -z "$(ls -A $INDEX_PATH)" ]
-then
-  echo "No salmon index detected --> building salmon index"
-
-  cd /root/scripts
-  build_salmon_index.sh "grch38"
-fi
 
 # Grab files
 cd "$FASTQ_DIR"
@@ -50,7 +46,7 @@ do
   # I.e. throw out incompatible alignments even if they are the only ones for a given fragment
   # Important: if FastQC has determined that the samples have GC bias, add the "--gcBias" and "--seqBias" flags here
   salmon quant \
-    --index="${INDEX_PATH}/grch38" \
+    --index="$SALMON_INDEX" \
     --threads 12 \
     --libType $LIB_TYPE \
     --incompatPrior 0.0 \

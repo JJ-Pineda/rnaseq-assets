@@ -23,7 +23,7 @@ sed -i.bak -e 's/>//g' decoys.txt
 # Concatenate transcripts and genome targets (transcripts MUST come first)
 cat "$TRANSCRIPTS" "$GENOME_ASSEMBLY" > gentrome.fa.gz
 
-# Build Salmon index (takes ~30 minutes and creates ~15gb worth of stuff)
+# Build Salmon index (takes ~21 minutes and creates ~15gb worth of stuff)
 # If using gencode references, "--gencode" flag is required for removing extra metadata in the target header
 # "--threads" parameter specifies number of threads to use for index creation
 # "-k" parameter specifies k-mer size (defaulted to 31 which is best for reads >=75bp)

@@ -5,7 +5,7 @@ ENSEMBL_RELEASE=$2
 
 if [ -z "$ENSEMBL_RELEASE" ]
 then
-  ENSEMBL_RELEASE=84
+  ENSEMBL_RELEASE=112
 fi
 
 cd /root

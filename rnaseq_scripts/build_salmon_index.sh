@@ -14,7 +14,7 @@ set -e -u
 
 cd "$REF_DIR"
 
-GENOME_ASSEMBLY=$(ls *primary_assembly.genome.fa.gz)
+GENOME_ASSEMBLY=$(ls *primary_assembly.fa.gz)
 TRANSCRIPTS=$(ls *cdna.all.fa.gz)
 
 grep "^>" <(gunzip -c "$GENOME_ASSEMBLY") | cut -d " " -f 1 > decoys.txt
@@ -23,7 +23,7 @@ sed -i.bak -e 's/>//g' decoys.txt
 # Concatenate transcripts and genome targets (transcripts MUST come first)
 cat "$TRANSCRIPTS" "$GENOME_ASSEMBLY" > gentrome.fa.gz
 
-# Build Salmon index (takes ~30 minutes and creates ~15gb worth of stuff --> maybe re-do with every batch)
+# Build Salmon index (takes ~30 minutes and creates ~15gb worth of stuff)
 # If using gencode references, "--gencode" flag is required for removing extra metadata in the target header
 # "--threads" parameter specifies number of threads to use for index creation
 # "-k" parameter specifies k-mer size (defaulted to 31 which is best for reads >=75bp)

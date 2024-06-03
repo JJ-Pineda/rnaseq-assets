@@ -4,7 +4,7 @@
 GENOME=$1
 
 INDEX_DIR="/root/indexes/salmon"
-REF_DIR="/root/gencode_references/$GENOME"
+REF_DIR="/root/ensembl_references/$GENOME"
 
 SECONDS=0
 
@@ -15,7 +15,7 @@ set -e -u
 cd "$REF_DIR"
 
 GENOME_ASSEMBLY=$(ls *primary_assembly.genome.fa.gz)
-TRANSCRIPTS=$(ls *transcripts.fa.gz)
+TRANSCRIPTS=$(ls *cdna.all.fa.gz)
 
 grep "^>" <(gunzip -c "$GENOME_ASSEMBLY") | cut -d " " -f 1 > decoys.txt
 sed -i.bak -e 's/>//g' decoys.txt
@@ -24,17 +24,16 @@ sed -i.bak -e 's/>//g' decoys.txt
 cat "$TRANSCRIPTS" "$GENOME_ASSEMBLY" > gentrome.fa.gz
 
 # Build Salmon index (takes ~30 minutes and creates ~15gb worth of stuff --> maybe re-do with every batch)
-# --gencode flag is for removing extra metadata in the target header separated by | from the gencode reference
-# --threads parameter specifies number of threads to use for index creation
-# -k parameter specifies k-mer size (defaulted to 31 which is best for reads >=75bp)
+# If using gencode references, "--gencode" flag is required for removing extra metadata in the target header
+# "--threads" parameter specifies number of threads to use for index creation
+# "-k" parameter specifies k-mer size (defaulted to 31 which is best for reads >=75bp)
 cd "$INDEX_DIR"
 
 salmon index \
   -t "${REF_DIR}/gentrome.fa.gz" \
   --decoys "${REF_DIR}/decoys.txt" \
   --threads 12 \
-  --index "$GENOME" \
-  --gencode
+  --index "$GENOME"
 
 echo "Created Salmon index from $GENOME transcriptome using genome for decoys"
 

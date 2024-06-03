@@ -33,4 +33,3 @@ RUN cd && mkdir data scripts indexes
 RUN cd /root/indexes && mkdir star bbsplit salmon hisat2
 RUN cd /root/indexes/star && mkdir grch38
 RUN cd /root/indexes/bbsplit && mkdir grch38_grcm39
-RUN cd /root/indexes/salmon && mkdir grch38

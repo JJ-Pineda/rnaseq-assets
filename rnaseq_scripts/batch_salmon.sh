@@ -11,39 +11,16 @@ set -o pipefail
 set -e -u
 
 # Check for Salmon index
-ASSETS_DIR="/Users/javier/CompBioAssets"
-cd "${ASSETS_DIR}/salmon_indices/grch38"
+INDEX_PATH="/root/indexes/salmon"
+cd "$INDEX_PATH"
 
-# Create Salmon index as needed
-if [ ! -d "salmon_index" ]; then
+# Build Salmon index if needed
+if [ -z "$(ls -A $INDEX_PATH)" ]
+then
   echo "No salmon index detected --> building salmon index"
 
-  # Extract names of genome targets for decoys construction
-  cd "${ASSETS_DIR}/gencode_references/grch38/"
-  
-  grep "^>" <(gunzip -c GRCh38.primary_assembly.genome.fa.gz) | cut -d " " -f 1 > decoys.txt
-  sed -i.bak -e 's/>//g' decoys.txt
-  
-  # Concatenate transcripts and genome targets (transcripts MUST come first)
-  cat gencode.v45.transcripts.fa.gz GRCh38.primary_assembly.genome.fa.gz > gentrome.fa.gz
-  
-  # Build Salmon index (takes ~30 minutes and creates ~15gb worth of stuff --> maybe re-do with every batch)
-  # --gencode flag is for removing extra metadata in the target header separated by | from the gencode reference
-  # --threads parameter specifies number of threads to use for index creation
-  # -k parameter specifies k-mer size (defaulted to 31 which is best for reads >=75bp)
-  cd "${ASSETS_DIR}/salmon_indices/grch38/"
-
-  salmon index \
-    -t ../../gencode_references/grch38/gentrome.fa.gz \
-    --decoys ../../gencode_references/grch38/decoys.txt \
-    --threads 12 \
-    --index salmon_index \
-    --gencode
-
-  echo "Created Salmon index from GRCh38 transcriptome using genome for decoys"
-
-  duration=$SECONDS
-  echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."
+  cd /root/scripts
+  build_salmon_index.sh "grch38"
 fi
 
 # Grab files
@@ -73,7 +50,7 @@ do
   # I.e. throw out incompatible alignments even if they are the only ones for a given fragment
   # Important: if FastQC has determined that the samples have GC bias, add the "--gcBias" and "--seqBias" flags here
   salmon quant \
-    --index="${ASSETS_DIR}/salmon_indices/grch38/salmon_index" \
+    --index="${INDEX_PATH}/grch38" \
     --threads 12 \
     --libType $LIB_TYPE \
     --incompatPrior 0.0 \

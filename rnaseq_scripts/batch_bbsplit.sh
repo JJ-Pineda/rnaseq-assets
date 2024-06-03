@@ -13,9 +13,9 @@ METHOD=$4
 SECONDS=0
 
 # For reference: https://github.com/BioInfoTools/BBMap/blob/master/sh/bbsplit.sh
-# Path to GENCODE files
-HUMAN_PATH=/root/gencode_references/grch38
-MOUSE_PATH=/root/gencode_references/grcm39
+# Path to ENSEMBL files
+HUMAN_PATH=/root/ensembl_references/grch38
+MOUSE_PATH=/root/ensembl_references/grcm39
 INDEX_PATH=/root/indexes/bbsplit/grch38_grcm39
 
 # Tell bash to abort on error
@@ -26,14 +26,15 @@ set -e -u
 # Note: uses ~22gb of storage for a genome-based human index (much smaller for transcriptome-based)
 if [ -z "$METHOD" ] || [ $METHOD = "t" ]
 then
-  REF_X="${HUMAN_PATH}/gencode.v46.transcripts.fa.gz"
-  REF_Y="${MOUSE_PATH}/gencode.vM35.transcripts.fa.gz"
-  bbsplit.sh -Xmx10g threads=12 build=1 path="$INDEX_PATH" ref_x="$REF_X" ref_y="$REF_Y"
+  HUMAN_TRANSCRIPTS=$(cd "$HUMAN_PATH" && ls *cdna.all.fa.gz)
+  MOUSE_TRANSCRIPTS=$(cd "$MOUSE_PATH" && ls *cdna.all.fa.gz)
+  bbsplit.sh -Xmx10g threads=12 build=1 path="$INDEX_PATH" ref_x="$HUMAN_TRANSCRIPTS" ref_y="$MOUSE_TRANSCRIPTS"
 else
+  HUMAN_GENOME=$(cd "$HUMAN_PATH" && ls *primary_assembly.fa.gz)
+  MOUSE_GENOME=$(cd "$MOUSE_PATH" && ls *primary_assembly.fa.gz)
+
   # Note: "maxindel" parameter set to "200k" when performing for genome sequencing
-  REF_X="${HUMAN_PATH}/GRCh38.primary_assembly.genome.fa.gz"
-  REF_Y="${MOUSE_PATH}/GRCm39.primary_assembly.genome.fa.gz"
-  bbsplit.sh -Xmx50g threads=12 build=1 maxindel=200k path="$INDEX_PATH" ref_x="$REF_X" ref_y="$REF_Y"
+  bbsplit.sh -Xmx50g threads=12 build=1 maxindel=200k path="$INDEX_PATH" ref_x="$HUMAN_GENOME" ref_y="$MOUSE_GENOME"
 fi
 
 # Perform the actual read splitting
@@ -51,7 +52,6 @@ do
     IN_NAME=$BASE_NAME$READ1_SUFFIX
 
     bbsplit.sh -Xmx10g threads=12 build=1 path="$INDEX_PATH" in="$IN_NAME" basename="${BASE_NAME}_%.fastq.gz" refstats="${BASE_NAME}_stat.txt"
-
   else
     IN_NAME1=$BASE_NAME$READ1_SUFFIX
     IN_NAME2=$BASE_NAME$READ2_SUFFIX

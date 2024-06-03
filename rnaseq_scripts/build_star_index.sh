@@ -14,7 +14,7 @@ SECONDS=0
 set -o pipefail
 set -e -u
 
-ASSEMBLY=${REF_DIR}/$(cd "$REF_DIR" && ls *primary_assembly.genome.fa.gz)
+ASSEMBLY=${REF_DIR}/$(cd "$REF_DIR" && ls *primary_assembly.fa.gz)
 ANNOTATION=${REF_DIR}/$(cd "$REF_DIR" && ls *gtf.gz)
 
 STAR --runThreadN 8 --runMode genomeGenerate --readFilesCommand "gunzip -c" --genomeDir "$STAR_INDEX" --genomeFastaFiles "$ASSEMBLY" --sjdbGTFfile "$ANNOTATION" --sjdbOverhang 100

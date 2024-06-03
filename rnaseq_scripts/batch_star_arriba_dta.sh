@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Here we are assuming that no downstream transcriptome assembly will be performed
+# Here we are assuming that downstream transcriptome assembly will be performed
 # This script has also been written for human samples
 STAR_INDEX=$1
 FASTQ_DIR=$2
@@ -44,7 +44,7 @@ ARRIBA_OUT_DIR="arriba"
 mkdir $STAR_OUT_DIR $ARRIBA_OUT_DIR
 
 # Adapted from "run_arriba.sh" script provided with Arriba installation
-echo "Will use \"--twopassMode None\" for STAR alignment"
+echo "Will use \"--twopassMode Basic\" for STAR alignment"
 
 READ1_FILES=$(ls *$READ1_SUFFIX)
 
@@ -61,17 +61,19 @@ do
   	READ_FILES="$BASE_NAME$READ1_SUFFIX $BASE_NAME$READ2_SUFFIX"
   fi
 
+  # For downstream transcriptome assembly: "--twopassMode Basic \" and "--outSAMstrandField intronMotif"
   STAR \
     --runThreadN 8 \
     --genomeDir "$STAR_INDEX" \
     --genomeLoad NoSharedMemory \
     --readFilesIn $READ_FILES \
     --readFilesCommand gunzip -c \
-    --twopassMode None \
+    --twopassMode Basic \
     --quantMode TranscriptomeSAM \
     --outStd BAM_Unsorted \
     --outSAMtype BAM Unsorted \
     --outSAMunmapped Within \
+    --outSAMstrandField intronMotif \
     --outBAMcompression 0 \
     --outFilterMultimapNmax 50 \
     --outFileNamePrefix "${STAR_OUT_DIR}/${BASE_NAME}_" \
@@ -87,6 +89,8 @@ do
     --chimSegmentReadGapMax 3 \
     --chimMultimapNmax 50 |
 
+  tee "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.out.bam" |
+
   arriba \
 	  -x /dev/stdin \
 	  -o "${ARRIBA_OUT_DIR}/${BASE_NAME}_fusions.tsv" \
@@ -98,8 +102,13 @@ do
 	  -t "$KNOWN_FUSIONS_TSV" \
 	  -p "$PROTEIN_DOMAINS_GFF3"
 
-  # Filter and sort BAM file
-  echo "Filtering and sorting transcriptomics coordinate BAM file"
+  # Filter and sort BAM files
+  echo "Filtering and sorting genomic coordinate BAM file"
+  sambamba view -F "not chimeric" -f bam --compression-level=0 "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.out.bam" |
+  sambamba sort -o "${STAR_OUT_DIR}/${BASE_NAME}_Filtered_Sorted.out.bam" /dev/stdin
+  rm "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.out.bam"
+
+  echo "Filtering and sorting transcriptomic coordinate BAM file"
   sambamba view -F "not chimeric" -f bam --compression-level=0 "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam" |
   sambamba sort -o "${STAR_OUT_DIR}/${BASE_NAME}_Filtered_Sorted.toTranscriptome.out.bam" /dev/stdin
   rm "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam"

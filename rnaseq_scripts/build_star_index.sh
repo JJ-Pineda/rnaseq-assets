@@ -16,8 +16,14 @@ set -e -u
 
 ASSEMBLY=${REF_DIR}/$(cd "$REF_DIR" && ls *primary_assembly.fa.gz)
 ANNOTATION=${REF_DIR}/$(cd "$REF_DIR" && ls *gtf.gz)
+gunzip -k "$ASSEMBLY" "$ANNOTATION"
 
-STAR --runThreadN 8 --runMode genomeGenerate --readFilesCommand "gunzip -c" --genomeDir "$STAR_INDEX" --genomeFastaFiles "$ASSEMBLY" --sjdbGTFfile "$ANNOTATION" --sjdbOverhang 100
+ASSEMBLY=$(echo "$ASSEMBLY" | sed -r "s/.gz//g")
+ANNOTATION=$(echo "$ANNOTATION" | sed -r "s/.gz//g")
+
+STAR --runThreadN 8 --runMode genomeGenerate --genomeDir "$STAR_INDEX" --genomeFastaFiles "$ASSEMBLY" --sjdbGTFfile "$ANNOTATION" --sjdbOverhang 100
+
+rm "$ASSEMBLY" "$ANNOTATION"
 
 duration=$SECONDS
 echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

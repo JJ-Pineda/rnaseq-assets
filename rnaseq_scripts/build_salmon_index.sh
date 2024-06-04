@@ -37,5 +37,7 @@ salmon index \
 
 echo "Created Salmon index from $GENOME transcriptome using genome for decoys"
 
+cd "$REF_DIR" && rm decoys.txt decoys.txt.bak gentrome.fa.gz
+
 duration=$SECONDS
 echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

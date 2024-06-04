@@ -22,8 +22,8 @@ fi
 SECONDS=0
 
 REF_DIR="/root/ensembl_references/grch38"
-ASSEMBLY=${REF_DIR}/$(cd "$REF_DIR" && ls *primary_assembly.fa.gz)
-ANNOTATION=${REF_DIR}/$(cd "REF_DIR" && ls *gtf.gz)
+ASSEMBLY=$(ls ${REF_DIR}/*primary_assembly.fa.gz)
+ANNOTATION=$(ls ${REF_DIR}/*gtf.gz)
 ARRIBA_PATH=$(echo "$(type -p arriba)" | sed -r "s/\/arriba$//g")
 BLACKLIST_TSV="${ARRIBA_PATH}/database/blacklist_hg38_GRCh38_v2.4.0.tsv.gz"
 KNOWN_FUSIONS_TSV="${ARRIBA_PATH}/database/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz"

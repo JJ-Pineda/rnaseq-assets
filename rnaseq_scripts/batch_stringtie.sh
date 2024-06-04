@@ -26,7 +26,7 @@ then
   ENSEMBL_DIR="/root/ensembl_references/grch38"
 fi
 
-ANNOTATION=${ENSEMBL_DIR}/$(cd "$ENSEMBL_DIR" && ls *gtf.gz)
+ANNOTATION=$(ls ${ENSEMBL_DIR}/*gtf.gz)
 
 # Unzip GTF
 gunzip -k "$ANNOTATION"

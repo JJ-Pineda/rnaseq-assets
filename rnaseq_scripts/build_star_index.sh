@@ -14,8 +14,8 @@ mkdir "$STAR_INDEX"
 
 SECONDS=0
 
-ASSEMBLY=${REF_DIR}/$(cd "$REF_DIR" && ls *primary_assembly.fa.gz)
-ANNOTATION=${REF_DIR}/$(cd "$REF_DIR" && ls *gtf.gz)
+ASSEMBLY=$(ls ${REF_DIR}/*primary_assembly.fa.gz)
+ANNOTATION=$(ls ${REF_DIR}/*gtf.gz)
 gunzip -k "$ASSEMBLY" "$ANNOTATION"
 
 ASSEMBLY=$(echo "$ASSEMBLY" | sed -r "s/.gz//g")

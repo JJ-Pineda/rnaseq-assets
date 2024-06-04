@@ -25,7 +25,10 @@ mkdir "$RSEM_REF_DIR"
 # Fast: ~1 minute
 rsem-prepare-reference --gtf "$ANNOTATION" "$ASSEMBLY" "${RSEM_REF_DIR}/${GENOME}"
 
-# Remove uncompressed files
+# Gzip RSEM fasta files
+gzip ${RSEM_REF_DIR}/*.fa
+
+# Remove uncompressed ensembl files
 rm "$ASSEMBLY" "$ANNOTATION"
 
 duration=$SECONDS

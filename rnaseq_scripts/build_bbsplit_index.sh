@@ -18,18 +18,33 @@ INDEX_PATH=/root/indexes/bbsplit/grch38_grcm39
 # Build the directory if it doesn't exist
 mkdir -p "$INDEX_PATH"
 
-# Benchmark: <5 minutes
+# Benchmark: ~1 minute for transcriptome-based index
+# Benchmark: ~3 minutes for genome-based index
 # Note: uses ~22gb of storage for a genome-based human index (much smaller for transcriptome-based)
 if [ -z "$METHOD" ] || [ $METHOD = "g" ]
 then
   HUMAN_GENOME=$(ls $HUMAN_PATH/*primary_assembly.fa.gz)
   MOUSE_GENOME=$(ls $MOUSE_PATH/*primary_assembly.fa.gz)
 
-  bbsplit.sh -Xmx50g threads=12 build=1 path="$INDEX_PATH" ref_x="$HUMAN_GENOME" ref_y="$MOUSE_GENOME"
+  # Using fewer threads intentionally to lower memory usage
+  bbsplit.sh \
+    -Xmx50g \
+    threads=4 \
+    build=1 \
+    path="$INDEX_PATH" \
+    ref_x="$HUMAN_GENOME" \
+    ref_y="$MOUSE_GENOME"
 else
   HUMAN_TRANSCRIPTS=$(ls $HUMAN_PATH/*cdna.all.fa.gz)
   MOUSE_TRANSCRIPTS=$(ls $MOUSE_PATH/*cdna.all.fa.gz)
-  bbsplit.sh -Xmx10g threads=12 build=2 path="$INDEX_PATH" ref_x="$HUMAN_TRANSCRIPTS" ref_y="$MOUSE_TRANSCRIPTS"
+
+  bbsplit.sh \
+    -Xmx10g \
+    threads=12 \
+    build=2 \
+    path="$INDEX_PATH" \
+    ref_x="$HUMAN_TRANSCRIPTS" \
+    ref_y="$MOUSE_TRANSCRIPTS"
 fi
 
 duration=$SECONDS

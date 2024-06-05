@@ -13,7 +13,7 @@ then
 fi
 
 cd /root
-mkdir ensembl_references
+mkdir -p ensembl_references
 cd ensembl_references
 
 if [ $GENOME = "grch38" ]

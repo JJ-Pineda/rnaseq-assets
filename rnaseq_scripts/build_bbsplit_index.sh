@@ -22,13 +22,13 @@ mkdir -p "$INDEX_PATH"
 # Note: uses ~22gb of storage for a genome-based human index (much smaller for transcriptome-based)
 if [ -z "$METHOD" ] || [ $METHOD = "g" ]
 then
-  HUMAN_GENOME=$(cd "$HUMAN_PATH" && ls *primary_assembly.fa.gz)
-  MOUSE_GENOME=$(cd "$MOUSE_PATH" && ls *primary_assembly.fa.gz)
+  HUMAN_GENOME=$(ls $HUMAN_PATH/*primary_assembly.fa.gz)
+  MOUSE_GENOME=$(ls $MOUSE_PATH/*primary_assembly.fa.gz)
 
   bbsplit.sh -Xmx50g threads=12 build=1 path="$INDEX_PATH" ref_x="$HUMAN_GENOME" ref_y="$MOUSE_GENOME"
 else
-  HUMAN_TRANSCRIPTS=$(cd "$HUMAN_PATH" && ls *cdna.all.fa.gz)
-  MOUSE_TRANSCRIPTS=$(cd "$MOUSE_PATH" && ls *cdna.all.fa.gz)
+  HUMAN_TRANSCRIPTS=$(ls $HUMAN_PATH/*cdna.all.fa.gz)
+  MOUSE_TRANSCRIPTS=$(ls $MOUSE_PATH/*cdna.all.fa.gz)
   bbsplit.sh -Xmx10g threads=12 build=2 path="$INDEX_PATH" ref_x="$HUMAN_TRANSCRIPTS" ref_y="$MOUSE_TRANSCRIPTS"
 fi
 

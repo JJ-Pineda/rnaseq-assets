@@ -18,6 +18,7 @@ mkdir -p "$INDEX_PATH"
 source /root/miniconda3/etc/profile.d/conda.sh
 conda activate xengsort
 
+# Benchmark: ~11 minutes to build genome index
 # Suggested number of 25-k-mers for human/mouse is 4.5 billion
 # Likely possible to also create a transcriptome-based index (e.g. for downstream Salmon)
 echo "Building xengsort index..."

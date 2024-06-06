@@ -23,7 +23,7 @@ RUN wget -nv https://github.com/gpertea/stringtie/releases/download/v2.2.3/strin
     mv stringtie-2.2.3.Linux_x86_64 stringtie-2.2.3 && \
     rm stringtie-2.2.3.Linux_x86_64.tar.gz
 
-ENV PATH=$PATH:/arriba_v2.4.0:/usr/share/bbmap:/stringtie-2.2.3
+RUN echo 'export PATH="$PATH:/arriba_v2.4.0:/usr/share/bbmap:/stringtie-2.2.3"' > ~/.bashrc
 
 RUN cd /usr/share/java && unzip -d bbmap bbmap.jar
 

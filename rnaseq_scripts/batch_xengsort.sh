@@ -37,7 +37,6 @@ do
   BASE_NAME="${f//$READ1_SUFFIX/}"
   echo "Splitting reads for $BASE_NAME"
 
-  gunzip -k "$BASE_NAME"*
   READ_ARG="--fastq $f"
   if [ -n "$READ2_SUFFIX" ]
   then

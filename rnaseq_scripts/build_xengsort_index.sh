@@ -18,27 +18,26 @@ INDEX_PATH=/root/indexes/xengsort/grch38_grcm39
 # Build the index directory if it doesn't exist
 mkdir -p "$INDEX_PATH"
 
-# Suggested number of 25-k-mers for human/mouse is 4.5 billion
-# Changed to 5.6 billion after empirical testing
-# Using 600 million 25-k-mers for transcriptome index
+# Suggested number of 25-k-mers for human/mouse genome is 4.5 billion
+# Using 210 million 25-k-mers for transcriptome index
 if [ -z "$METHOD" ] || [ $METHOD = "g" ]
 then
   HUMAN_REF=$(ls $HUMAN_PATH/*primary_assembly.fa.gz)
   MOUSE_REF=$(ls $MOUSE_PATH/*primary_assembly.fa.gz)
   INDEX_PATH=$INDEX_PATH/genome
-  N_KMERS=5_600_000_000
+  N_KMERS=4_500_000_000
 else
   HUMAN_REF=$(ls $HUMAN_PATH/*cdna.all.fa.gz)
   MOUSE_REF=$(ls $MOUSE_PATH/*cdna.all.fa.gz)
   INDEX_PATH=$INDEX_PATH/transcriptome
-  N_KMERS=600_000_000
+  N_KMERS=210_000_000
 fi
 
 # Activate xengsort conda environment
 source /root/miniconda3/etc/profile.d/conda.sh
 conda activate xengsort
 
-# Benchmark: ~10 minutes to build genome index
+# Benchmark: ~15 minutes to build genome index
 # Benchmark: ~1 minutes to build transcriptome index
 xengsort index --index "$INDEX_PATH" --host "$MOUSE_REF" --graft "$HUMAN_REF" -n $N_KMERS -k 25
 

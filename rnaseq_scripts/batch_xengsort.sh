@@ -9,7 +9,7 @@ set -e -u
 # The genome based method should especially be used if you care about novel transcripts or gene fusions
 # For WES, "g" must be used
 FASTQ_DIR=$1
-READ1_SUFFIX=$2
+READ1_SUFFIX=$2 # Note: must have "fq.gz" file extension for xengsort!!!
 READ2_SUFFIX=$3
 METHOD=$4
 
@@ -47,6 +47,8 @@ do
   conda activate xengsort
 
   # Note: can only specify threads for the "classify" method not "index"
+  # Benchmark: ~10 minutes to split reads using genome-based index
+  # Benchmark: ~7 minutes to split reads using transcriptome-based index
   xengsort classify --index "$INDEX_PATH" $READ_ARG --prefix "$BASE_NAME" --threads 8
 
   conda deactivate

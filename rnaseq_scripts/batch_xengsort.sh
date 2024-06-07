@@ -93,10 +93,10 @@ do
 
   if [ -n "$READ2_SUFFIX" ]
   then
-    cat "${BASE_NAME}-"*".1.fq.gz" > "${BASE_NAME}-human.${READ1_SUFFIX}"
-    cat "${BASE_NAME}-"*".2.fq.gz" "${BASE_NAME}-both."*".fq.gz" > "${BASE_NAME}-human.${READ2_SUFFIX}"
+    cat "${BASE_NAME}-"*".1.fq.gz" > "${BASE_NAME}-human${READ1_SUFFIX}"
+    cat "${BASE_NAME}-"*".2.fq.gz" "${BASE_NAME}-both."*".fq.gz" > "${BASE_NAME}-human${READ2_SUFFIX}"
   else
-    cat "${BASE_NAME}-"*".fq.gz" > "${BASE_NAME}-human.${READ1_SUFFIX}"
+    cat "${BASE_NAME}-"*".fq.gz" > "${BASE_NAME}-human${READ1_SUFFIX}"
   fi
 
   # At this point, remove all intermediate files from xengsort

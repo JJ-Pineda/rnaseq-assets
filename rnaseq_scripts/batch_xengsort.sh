@@ -40,8 +40,8 @@ do
 
   if [ $FILE_EXTENSION != "fq.gz" ]
   then
-    READ1_INPUT=$(echo "${BASE_NAME}${READ1_SUFFIX}" | sed -r "s/$FILE_EXTENSION/fq.gz/g")
-    cp "${BASE_NAME}${READ1_SUFFIX}" "$READ1_INPUT"
+    READ1_INPUT=$(echo "$BASE_NAME$READ1_SUFFIX" | sed -r "s/$FILE_EXTENSION/fq.gz/g")
+    cp "$BASE_NAME$READ1_SUFFIX" "$READ1_INPUT"
   else
     READ1_INPUT="$BASE_NAME$READ1_SUFFIX"
   fi
@@ -51,8 +51,8 @@ do
   then
     if [ $FILE_EXTENSION != "fq.gz" ]
     then
-      READ2_INPUT=$(echo "${BASE_NAME}${READ2_SUFFIX}" | sed -r "s/$FILE_EXTENSION/fq.gz/g")
-      cp "${BASE_NAME}${READ2_SUFFIX}" "$READ2_INPUT"
+      READ2_INPUT=$(echo "$BASE_NAME$READ2_SUFFIX" | sed -r "s/$FILE_EXTENSION/fq.gz/g")
+      cp "$BASE_NAME$READ2_SUFFIX" "$READ2_INPUT"
     else
       READ2_INPUT="$BASE_NAME$READ2_SUFFIX"
     fi
@@ -66,7 +66,7 @@ do
   # Note: can only specify threads for the "classify" method not "index"
   # Benchmark: ~10 minutes to split reads using genome-based index
   # Benchmark: ~7 minutes to split reads using transcriptome-based index
-  xengsort classify --index "$INDEX_PATH" $READ_ARG --prefix "$BASE_NAME" --threads 8
+  xengsort classify --index "$INDEX_PATH" $READ_ARG --prefix "$BASE_NAME" --threads 8 > xengsort.log
 
   conda deactivate
 
@@ -79,6 +79,28 @@ do
       rm "$READ2_INPUT"
     fi
   fi
+
+  # Concatenate desired classifications
+  # Note: for a transcriptome-based index, novel transcripts or reads spanning fusion junctions could get classified as "neither"
+  # First remove reads we don't care to keep
+  if [ $METHOD = "t" ]
+  then
+    rm *"-host."* *"-ambiguous."* *"-neither."*
+  else
+    # Keep "neither" classification for genome-based splitting (for downstream transcriptome assembly or gene fusion detection)
+    rm *"-host."* *"-ambiguous."*
+  fi
+
+  if [ -n "$READ2_SUFFIX" ]
+  then
+    cat "${BASE_NAME}-"*".1.fq.gz" > "${BASE_NAME}-human.${READ1_SUFFIX}"
+    cat "${BASE_NAME}-"*".2.fq.gz" "${BASE_NAME}-both."*".fq.gz" > "${BASE_NAME}-human.${READ2_SUFFIX}"
+  else
+    cat "${BASE_NAME}-"*".fq.gz" > "${BASE_NAME}-human.${READ1_SUFFIX}"
+  fi
+
+  # At this point, remove all intermediate files from xengsort
+  rm -f *"-graft."* *"-host."* *"-both."* *"-ambiguous."* *"-neither."*
 
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

@@ -83,24 +83,18 @@ do
   # Concatenate desired classifications
   # Note: for a transcriptome-based index, novel transcripts or reads spanning fusion junctions could get classified as "neither"
   # First remove reads we don't care to keep
-  if [ $METHOD = "t" ]
-  then
-    rm "${BASE_NAME}-host."* "${BASE_NAME}-ambiguous."* "${BASE_NAME}-neither."*
-  else
-    # Keep "neither" classification for genome-based splitting (for downstream transcriptome assembly or gene fusion detection)
-    rm "${BASE_NAME}-host."* "${BASE_NAME}-ambiguous."*
-  fi
+  rm "${BASE_NAME}-host."* "${BASE_NAME}-ambiguous."*
 
   if [ -n "$READ2_SUFFIX" ]
   then
-    cat "${BASE_NAME}-"*".1.fq.gz" > "${BASE_NAME}-human${READ1_SUFFIX}"
-    cat "${BASE_NAME}-"*".2.fq.gz" "${BASE_NAME}-both."*".fq.gz" > "${BASE_NAME}-human${READ2_SUFFIX}"
+    cat "${BASE_NAME}-graft.1.fq.gz" "${BASE_NAME}-both.1.fq.gz" "${BASE_NAME}-neither.1.fq.gz" > "${BASE_NAME}-human${READ1_SUFFIX}"
+    cat "${BASE_NAME}-graft.2.fq.gz" "${BASE_NAME}-both.2.fq.gz" "${BASE_NAME}-neither.2.fq.gz" > "${BASE_NAME}-human${READ2_SUFFIX}"
   else
     cat "${BASE_NAME}-"*".fq.gz" > "${BASE_NAME}-human${READ1_SUFFIX}"
   fi
 
-  # At this point, remove all intermediate files from xengsort
-  rm -f "${BASE_NAME}-graft."* "${BASE_NAME}-host."* "${BASE_NAME}-both."* "${BASE_NAME}-ambiguous."* "${BASE_NAME}-neither."*
+  # At this point, remove all remaining intermediate files from xengsort
+  rm -f "${BASE_NAME}-graft."* "${BASE_NAME}-both."* "${BASE_NAME}-neither."*
 
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

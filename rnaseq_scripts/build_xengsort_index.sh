@@ -4,25 +4,43 @@
 set -o pipefail
 set -e -u
 
+# "g" for genome-based index (i.e. default) or "t"
+# In general, use "g"
+# Only use "t" if you absolutely don't care about finding gene fusions or novel transcripts (i.e. using Salmon)
+METHOD=$1
+
 SECONDS=0
 
-HUMAN_GENOME=$(ls /root/ensembl_references/grch38/*primary_assembly.fa.gz)
-MOUSE_GENOME=$(ls /root/ensembl_references/grcm39/*primary_assembly.fa.gz)
-
+HUMAN_PATH=/root/ensembl_references/grch38
+MOUSE_PATH=/root/ensembl_references/grcm39
 INDEX_PATH=/root/indexes/xengsort/grch38_grcm39
 
-# Build the directory if it doesn't exist
+# Build the index directory if it doesn't exist
 mkdir -p "$INDEX_PATH"
+
+# Suggested number of 25-k-mers for human/mouse is 4.5 billion
+# Changed to 5.6 billion after empirical testing
+# Using 600 million 25-k-mers for transcriptome index
+if [ -z "$METHOD" ] || [ $METHOD = "g" ]
+then
+  HUMAN_REF=$(ls $HUMAN_PATH/*primary_assembly.fa.gz)
+  MOUSE_REF=$(ls $MOUSE_PATH/*primary_assembly.fa.gz)
+  INDEX_PATH=$INDEX_PATH/genome
+  N_KMERS=5_600_000_000
+else
+  HUMAN_REF=$(ls $HUMAN_PATH/*cdna.all.fa.gz)
+  MOUSE_REF=$(ls $MOUSE_PATH/*cdna.all.fa.gz)
+  INDEX_PATH=$INDEX_PATH/transcriptome
+  N_KMERS=600_000_000
+fi
 
 # Activate xengsort conda environment
 source /root/miniconda3/etc/profile.d/conda.sh
 conda activate xengsort
 
-# Benchmark: ~11 minutes to build genome index
-# Suggested number of 25-k-mers for human/mouse is 4.5 billion
-# Likely possible to also create a transcriptome-based index (e.g. for downstream Salmon)
-echo "Building xengsort index..."
-xengsort index --index $INDEX_PATH/idx --host "$MOUSE_GENOME" --graft "$HUMAN_GENOME" -n 4_500_000_000 -k 25
+# Benchmark: ~10 minutes to build genome index
+# Benchmark: ~1 minutes to build transcriptome index
+xengsort index --index "$INDEX_PATH" --host "$MOUSE_REF" --graft "$HUMAN_REF" -n $N_KMERS -k 25
 
 conda deactivate
 

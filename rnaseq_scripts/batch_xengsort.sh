@@ -9,9 +9,10 @@ set -e -u
 # The genome based method should especially be used if you care about novel transcripts or gene fusions
 # For WES, "g" must be used
 FASTQ_DIR=$1
-READ1_SUFFIX=$2 # Note: must have "fq.gz" file extension for xengsort!!!
+READ1_SUFFIX=$2
 READ2_SUFFIX=$3
-METHOD=$4
+FILE_EXTENSION=$4  # E.g. "FASTQ.gz", "fa.gz", "fq.gz", etc
+METHOD=$5
 
 SECONDS=0
 
@@ -37,10 +38,26 @@ do
   BASE_NAME="${f//$READ1_SUFFIX/}"
   echo "Splitting reads for $BASE_NAME"
 
-  READ_ARG="--fastq $f"
+  if [ $FILE_EXTENSION != "fq.gz" ]
+  then
+    READ1_INPUT=$(echo "${BASE_NAME}${READ1_SUFFIX}" | sed -r "s/$FILE_EXTENSION/fq.gz/g")
+    cp "${BASE_NAME}${READ1_SUFFIX}" "$READ1_INPUT"
+  else
+    READ1_INPUT="$BASE_NAME$READ1_SUFFIX"
+  fi
+
+  READ_ARG="--fastq $READ1_INPUT"
   if [ -n "$READ2_SUFFIX" ]
   then
-    READ_ARG="$READ_ARG --pairs $BASE_NAME$READ2_SUFFIX"
+    if [ $FILE_EXTENSION != "fq.gz" ]
+    then
+      READ2_INPUT=$(echo "${BASE_NAME}${READ2_SUFFIX}" | sed -r "s/$FILE_EXTENSION/fq.gz/g")
+      cp "${BASE_NAME}${READ2_SUFFIX}" "$READ2_INPUT"
+    else
+      READ2_INPUT="$BASE_NAME$READ2_SUFFIX"
+    fi
+
+    READ_ARG="$READ_ARG --pairs $READ2_INPUT"
   fi
 
   source /root/miniconda3/etc/profile.d/conda.sh
@@ -52,6 +69,16 @@ do
   xengsort classify --index "$INDEX_PATH" $READ_ARG --prefix "$BASE_NAME" --threads 8
 
   conda deactivate
+
+  # Remove unnecessary file copies
+  if [ $FILE_EXTENSION != "fq.gz" ]
+  then
+    rm "$READ1_INPUT"
+    if [ -n "$READ2_SUFFIX" ]
+    then
+      rm "$READ2_INPUT"
+    fi
+  fi
 
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

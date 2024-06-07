@@ -85,10 +85,10 @@ do
   # First remove reads we don't care to keep
   if [ $METHOD = "t" ]
   then
-    rm *"-host."* *"-ambiguous."* *"-neither."*
+    rm "${BASE_NAME}-host."* "${BASE_NAME}-ambiguous."* "${BASE_NAME}-neither."*
   else
     # Keep "neither" classification for genome-based splitting (for downstream transcriptome assembly or gene fusion detection)
-    rm *"-host."* *"-ambiguous."*
+    rm "${BASE_NAME}-host."* "${BASE_NAME}-ambiguous."*
   fi
 
   if [ -n "$READ2_SUFFIX" ]
@@ -100,7 +100,7 @@ do
   fi
 
   # At this point, remove all intermediate files from xengsort
-  rm -f *"-graft."* *"-host."* *"-both."* *"-ambiguous."* *"-neither."*
+  rm -f "${BASE_NAME}-graft."* "${BASE_NAME}-host."* "${BASE_NAME}-both."* "${BASE_NAME}-ambiguous."* "${BASE_NAME}-neither."*
 
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

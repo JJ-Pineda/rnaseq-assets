@@ -17,9 +17,6 @@ METHOD=$4
 SECONDS=0
 
 # For reference: https://github.com/BioInfoTools/BBMap/blob/master/sh/bbsplit.sh
-# Path to ENSEMBL files
-HUMAN_PATH=/root/ensembl_references/grch38
-MOUSE_PATH=/root/ensembl_references/grcm39
 INDEX_PATH=/root/indexes/bbsplit/grch38_grcm39
 
 if [ -z "$METHOD" ] || [ $METHOD = "g" ]

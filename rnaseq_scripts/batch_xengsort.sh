@@ -39,7 +39,7 @@ do
   echo "Splitting reads for $BASE_NAME"
 
   gunzip -k "$BASE_NAME"*
-  READ_ARG="--fastq $BASE_NAME$READ1_SUFFIX"
+  READ_ARG="--fastq $f"
   if [ -n "$READ2_SUFFIX" ]
   then
     READ_ARG="$READ_ARG --pairs $BASE_NAME$READ2_SUFFIX"
@@ -52,13 +52,6 @@ do
   xengsort classify --index "$INDEX_PATH" $READ_ARG --prefix "$BASE_NAME" --threads 8
 
   conda deactivate
-
-  # Remove decompressed fastq files
-  rm "$BASE_NAME$READ1_SUFFIX"
-  if [ -n "$READ2_SUFFIX" ]
-  then
-    rm "$BASE_NAME$READ2_SUFFIX"
-  fi
 
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

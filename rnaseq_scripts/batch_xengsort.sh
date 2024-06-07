@@ -24,8 +24,7 @@ else
   INDEX_PATH=$INDEX_PATH/transcriptome
 fi
 
-mkdir -p "$INDEX_PATH"
-if [ -z "$(ls $INDEX_PATH)" ]
+if [ -z "$(ls $INDEX_PATH*)" ]
 then
   ./build_xengsort_index.sh "$METHOD"
 fi

@@ -61,5 +61,3 @@ do
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."
 done
-
-conda deactivate

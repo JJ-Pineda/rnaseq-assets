@@ -10,8 +10,7 @@ READ1_SUFFIX=$3
 READ2_SUFFIX=$4  # Leave blank for single-end reads
 
 # Ensure that Salmon index exists
-cd "$SALMON_INDEX"
-if [ -z $(ls) ]
+if [ -z "$(ls $SALMON_INDEX)" ]
 then
   echo "No Salmon index detected. Exiting..."
   exit

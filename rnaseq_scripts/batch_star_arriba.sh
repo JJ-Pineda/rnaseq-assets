@@ -12,8 +12,7 @@ READ1_SUFFIX=$3
 READ2_SUFFIX=$4
 
 # Ensure that STAR index exists
-cd "$STAR_INDEX"
-if [ -z $(ls) ]
+if [ -z "$(ls $STAR_INDEX)" ]
 then
   echo "No STAR index detected. Exiting..."
   exit

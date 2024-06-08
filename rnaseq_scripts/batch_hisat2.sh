@@ -11,8 +11,7 @@ READ1_SUFFIX=$4
 READ2_SUFFIX=$5 # Leave blank for single-end reads
 
 # Ensure that HISAT2 index exists
-cd "$HISAT2_INDEX"
-if [ -z $(ls) ]
+if [ -z "$(ls $HISAT2_INDEX)" ]
 then
   echo "No HISAT2 index detected. Exiting..."
   exit

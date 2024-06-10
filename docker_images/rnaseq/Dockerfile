@@ -5,6 +5,7 @@ RUN apt update && \
         fastqc \
         multiqc \
         sambamba \
+        samtools \
         bbmap \
         rna-star \
         dialog \

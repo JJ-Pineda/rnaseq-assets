@@ -109,7 +109,7 @@ do
 
   echo "Filtering and sorting transcriptomic coordinate BAM file"
   sambamba view -F "not chimeric" -f bam --compression-level=0 "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam" |
-  sambamba sort -o "${STAR_OUT_DIR}/${BASE_NAME}_Filtered_Sorted.toTranscriptome.out.bam" /dev/stdin
+  sambamba sort --sort-by-name -o "${STAR_OUT_DIR}/${BASE_NAME}_Filtered_Sorted.toTranscriptome.out.bam" /dev/stdin
   rm "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam"
 
   duration=$SECONDS

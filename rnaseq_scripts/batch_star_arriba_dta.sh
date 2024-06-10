@@ -38,7 +38,7 @@ KNOWN_FUSIONS_TSV=$(echo "$KNOWN_FUSIONS_TSV" | sed -r "s/.gz//g")
 cd "$FASTQ_DIR"
 
 # Create directories for STAR and Arriba
-STAR_OUT_DIR="star_alignment"
+STAR_OUT_DIR="star"
 ARRIBA_OUT_DIR="arriba"
 mkdir $STAR_OUT_DIR $ARRIBA_OUT_DIR
 

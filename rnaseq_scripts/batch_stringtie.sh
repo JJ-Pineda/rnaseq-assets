@@ -50,5 +50,8 @@ stringtie --merge -G "$ANNOTATION" -o "stringtie_transcriptome.gtf" "$STRINGTIE_
 # Remove decompressed annotation file and intermediate stringtie GTF files
 rm "$ANNOTATION" *stringtie.gtf
 
+# Finally, compress final annotation file
+gzip stringtie_transcriptome.gtf
+
 duration=$SECONDS
 echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

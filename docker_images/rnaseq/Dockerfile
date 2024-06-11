@@ -9,6 +9,7 @@ RUN apt update && \
         rna-star \
         dialog \
         hisat2 \
+        gffread \
         salmon \
         rsem \
         subread \

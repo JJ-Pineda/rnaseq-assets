@@ -6,7 +6,7 @@ set -e -u
 
 BAM_DIR=$1
 BAM_SUFFIX=$2
-STRANDNESS=$3
+STRANDNESS=$3   # e.g. "--rf" or "--fr"
 ENSEMBL_DIR=$4
 
 SECONDS=0
@@ -14,11 +14,6 @@ SECONDS=0
 if [ -z "$STRANDNESS" ]
 then
   STRANDNESS=""
-fi
-
-if [ -z "$ENSEMBL_DIR" ]
-then
-  ENSEMBL_DIR="/root/ensembl_references/grch38"
 fi
 
 if [ -z "$ENSEMBL_DIR" ]

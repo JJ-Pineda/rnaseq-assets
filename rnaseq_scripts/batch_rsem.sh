@@ -10,7 +10,7 @@ set -e -u
 # "FR" for forward and paired-end
 # "F" for forward and single-end
 
-RSEM_REF=$1
+RSEM_REF_DIR=$1
 BAM_DIR=$2
 BAM_SUFFIX=$3
 STRANDNESS=$4
@@ -39,7 +39,7 @@ fi
 SECONDS=0
 
 # Unzip RSEM fasta files
-gunzip -k $RSEM_REF/*fa.gz
+gunzip -k $RSEM_REF_DIR/*fa.gz
 
 # Perform actual transcriptome assembly
 cd "$BAM_DIR"
@@ -57,7 +57,7 @@ do
 	--estimate-rspd \
 	--append-names \
 	"$f" \
-	"${RSEM_REF}/rsem" \
+	"${RSEM_REF_DIR}/rsem" \
 	"$BASE_NAME"
 
   duration=$SECONDS
@@ -65,4 +65,4 @@ do
 done
 
 # Remove decompressed RSEM fasta files
-rm "$RSEM_REF"/*fa
+rm "$RSEM_REF_DIR"/*fa

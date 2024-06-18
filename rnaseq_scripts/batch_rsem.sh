@@ -50,6 +50,7 @@ do
   BASE_NAME="${f//$BAM_SUFFIX/}"
   echo "Running quantification for $BASE_NAME"
 
+  # Benchmark: takes ~56 minutes when quantifying a PDMR paired-end BAM file using 8 threads
   rsem-calculate-expression \
     -p 8 $PAIRED_ARG $STRAND_ARG \
     --bam \

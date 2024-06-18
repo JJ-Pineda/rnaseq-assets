@@ -99,8 +99,17 @@ do
 
   # Filter and sort BAM file
   echo "Filtering and sorting transcriptomics coordinate BAM file"
-  sambamba view -F "not chimeric" -f bam --compression-level=0 "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam" |
-  sambamba sort --sort-by-name -o "${STAR_OUT_DIR}/${BASE_NAME}_Filtered_Sorted.toTranscriptome.out.bam" /dev/stdin
+  if [ -z "$READ2_SUFFIX" ]
+  then
+    sambamba view -F "not chimeric" -f bam --compression-level=0 "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam" |
+    sambamba sort --sort-by-name -o "${STAR_OUT_DIR}/${BASE_NAME}_Filtered_Sorted.toTranscriptome.out.bam" /dev/stdin
+  else
+    # sambamba and samtools sometimes mess up multimapping paired-end reads when sorting --> use unix sort instead
+    (
+      sambamba view -F "not chimeric" --with-header "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam" |
+      sort -S 3G --parallel=8 -t $'\t' -k 1,1 -k 13,13
+    ) | sambamba view --sam-input -f bam -o "${STAR_OUT_DIR}/${BASE_NAME}_Filtered_Sorted.toTranscriptome.out.bam" /dev/stdin
+  fi
   rm "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam"
 
   duration=$SECONDS

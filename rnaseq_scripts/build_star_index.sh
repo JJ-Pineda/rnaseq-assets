@@ -22,7 +22,13 @@ ASSEMBLY=$(echo "$ASSEMBLY" | sed -r "s/.gz//g")
 ANNOTATION=$(echo "$ANNOTATION" | sed -r "s/.gz//g")
 
 # Takes ~30 minutes
-STAR --runThreadN 8 --runMode genomeGenerate --genomeDir "$STAR_INDEX" --genomeFastaFiles "$ASSEMBLY" --sjdbGTFfile "$ANNOTATION" --sjdbOverhang 100
+STAR \
+  --runThreadN 8 \
+  --runMode genomeGenerate \
+  --genomeDir "$STAR_INDEX" \
+  --genomeFastaFiles "$ASSEMBLY" \
+  --sjdbGTFfile "$ANNOTATION" \
+  --sjdbOverhang 100
 
 rm "$ASSEMBLY" "$ANNOTATION"
 

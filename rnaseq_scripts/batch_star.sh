@@ -20,30 +20,14 @@ fi
 
 SECONDS=0
 
-REF_DIR="/root/ensembl_references/grch38"
-ASSEMBLY=$(ls ${REF_DIR}/*primary_assembly.fa.gz)
-ANNOTATION=$(ls ${REF_DIR}/*gtf.gz)
-ARRIBA_PATH=$(echo "$(type -p arriba)" | sed -r "s/\/arriba$//g")
-BLACKLIST_TSV="${ARRIBA_PATH}/database/blacklist_hg38_GRCh38_v2.4.0.tsv.gz"
-KNOWN_FUSIONS_TSV="${ARRIBA_PATH}/database/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz"
-PROTEIN_DOMAINS_GFF3="${ARRIBA_PATH}/database/protein_domains_hg38_GRCh38_v2.4.0.gff3"
-
-# Gunzip assembly, annotation, blacklisted fusions, and known fusions files
-gunzip -k "$ASSEMBLY" "$ANNOTATION" "$BLACKLIST_TSV" "$KNOWN_FUSIONS_TSV"
-ASSEMBLY=$(echo "$ASSEMBLY" | sed -r "s/.gz//g")
-ANNOTATION=$(echo "$ANNOTATION" | sed -r "s/.gz//g")
-BLACKLIST_TSV=$(echo "$BLACKLIST_TSV" | sed -r "s/.gz//g")
-KNOWN_FUSIONS_TSV=$(echo "$KNOWN_FUSIONS_TSV" | sed -r "s/.gz//g")
-
 cd "$FASTQ_DIR"
 
 # Create directories for STAR and Arriba
 STAR_OUT_DIR="star"
-ARRIBA_OUT_DIR="arriba"
-mkdir $STAR_OUT_DIR $ARRIBA_OUT_DIR
+mkdir $STAR_OUT_DIR
 
 # Adapted from "run_arriba.sh" script provided with Arriba installation
-echo "Will use \"--twopassMode None\" for STAR alignment"
+echo "Will use \"--twopassMode None\" for STAR alignment. This bash script will only retain transcriptomic coordinate BAM files."
 
 READ1_FILES=$(ls *$READ1_SUFFIX)
 
@@ -76,26 +60,10 @@ do
     --outFileNamePrefix "${STAR_OUT_DIR}/${BASE_NAME}_" \
     --peOverlapNbasesMin 10 \
     --alignSplicedMateMapLminOverLmate 0.5 \
-    --alignSJstitchMismatchNmax 5 -1 5 5 \
-    --chimSegmentMin 10 \
-    --chimOutType WithinBAM HardClip \
-    --chimJunctionOverhangMin 10 \
-    --chimScoreDropMax 30 \
-    --chimScoreJunctionNonGTAG 0 \
-    --chimScoreSeparation 1 \
-    --chimSegmentReadGapMax 3 \
-    --chimMultimapNmax 50 |
+    --alignSJstitchMismatchNmax 5 -1 5 5 > "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.out.bam"
 
-  arriba \
-	  -x /dev/stdin \
-	  -o "${ARRIBA_OUT_DIR}/${BASE_NAME}_fusions.tsv" \
-	  -O "${ARRIBA_OUT_DIR}/${BASE_NAME}_fusions.discarded.tsv" \
-	  -a "$ASSEMBLY" \
-	  -g "$ANNOTATION" \
-	  -b "$BLACKLIST_TSV" \
-	  -k "$KNOWN_FUSIONS_TSV" \
-	  -t "$KNOWN_FUSIONS_TSV" \
-	  -p "$PROTEIN_DOMAINS_GFF3"
+  # Remove unnecessary genomic coordinate BAM file
+  rm "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.out.bam"
 
   # Filter and sort BAM file
   echo "Filtering and sorting transcriptomics coordinate BAM file"
@@ -115,6 +83,3 @@ do
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."
 done
-
-# Remove decompressed assembly/annotation files
-rm "$ASSEMBLY" "$ANNOTATION" "$BLACKLIST_TSV" "$KNOWN_FUSIONS_TSV"

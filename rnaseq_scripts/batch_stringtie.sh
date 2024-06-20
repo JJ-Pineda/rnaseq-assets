@@ -42,11 +42,21 @@ done
 STRINGTIE_FILES=$(ls *stringtie.gtf | tr '\n' ' ' | xargs)
 stringtie --merge -G "$ANNOTATION" -o "stringtie_transcriptome.gtf" "$STRINGTIE_FILES"
 
+# Check number of lines in the merged GTF that are missing strand information
+UNSTRANDED=$(awk -F'\t' '$7 == "."' stringtie_transcriptome.gtf | wc -l)
+STRANDED=$(awk -F'\t' '$7 == "+" || $7 == "-"' stringtie_transcriptome.gtf | wc -l)
+LINE_COUNT=$(wc -l stringtie_transcriptome.gtf)
+echo "$UNSTRANDED lines are missing strand information (out of $LINE_COUNT)."
+echo "$STRANDED lines contain strand information (out of $LINE_COUNT)."
+echo "Will remove the $UNSTRANDED offending lines that are missing strand information."
+
+awk '$7 == "+" || $7 == "-"' stringtie_transcriptome.gtf > stringtie_transcriptome_filtered.gtf
+
 # Remove decompressed annotation file and intermediate stringtie GTF files
-rm "$ANNOTATION" *stringtie.gtf
+rm "$ANNOTATION" *stringtie.gtf stringtie_transcriptome.gtf
 
 # Finally, compress final annotation file
-gzip stringtie_transcriptome.gtf
+gzip stringtie_transcriptome_filtered.gtf
 
 duration=$SECONDS
 echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

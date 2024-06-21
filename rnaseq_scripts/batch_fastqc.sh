@@ -16,7 +16,7 @@ fi
 SECONDS=0
 
 cd "$FASTQ_DIR"
-mkdir "$OUTPUT_FOLDER"
+mkdir -p "$OUTPUT_FOLDER"
 FASTQ_FILES=$(ls *$FASTQ_SUFFIX | tr '\n' ' ')
 FASTQ_FILES=$(echo $FASTQ_FILES)
 

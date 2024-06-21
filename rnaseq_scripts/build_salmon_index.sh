@@ -12,6 +12,8 @@ REF_DIR="/root/ensembl_references/$GENOME"
 
 SECONDS=0
 
+mkdir -p "$INDEX_DIR"
+
 cd "$REF_DIR"
 
 GENOME_ASSEMBLY=$(ls *primary_assembly.fa.gz)

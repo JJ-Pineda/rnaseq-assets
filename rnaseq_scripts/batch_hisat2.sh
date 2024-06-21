@@ -28,7 +28,7 @@ fi
 
 
 cd "$FASTQ_DIR"
-mkdir hisat2
+mkdir -p hisat2
 
 READ1_FILES=$(ls *$READ1_SUFFIX)
 for f in $READ1_FILES

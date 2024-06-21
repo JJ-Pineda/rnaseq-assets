@@ -10,7 +10,7 @@ GENOME=$1
 STAR_INDEX="/root/indexes/star/$GENOME"
 REF_DIR="/root/ensembl_references/$GENOME"
 
-mkdir "$STAR_INDEX"
+mkdir -p "$STAR_INDEX"
 
 SECONDS=0
 

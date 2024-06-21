@@ -26,7 +26,7 @@ salmon index \
   -t /tmp/gentrome.fa.gz \
   --decoys /tmp/decoys.txt \
   --threads 12 \
-  --index "${INDEX_DIR}/index"
+  --index "$INDEX_DIR"
 
 rm /tmp/decoys.txt /tmp/decoys.txt.bak /tmp/gentrome.fa.gz
 

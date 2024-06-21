@@ -20,7 +20,9 @@ STRINGTIE_GTF=$(echo "$STRINGTIE_GTF" | sed -r "s/.gz//g")
 
 gffread "$GENOME_ASSEMBLY" -g "$GENOME_ASSEMBLY" -w "${OUTPUT_DIR}/stringtie_transcriptome.fa"
 
-rm "$GENOME_ASSEMBLY" "$STRINGTIE_GTF"
+gzip "${OUTPUT_DIR}/stringtie_transcriptome.fa"
+
+rm "$GENOME_ASSEMBLY" "${GENOME_ASSEMBLY}.fai" "$STRINGTIE_GTF"
 
 duration=$SECONDS
 echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

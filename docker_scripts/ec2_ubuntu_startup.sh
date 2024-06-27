@@ -17,7 +17,7 @@ git clone "https://oauth2:${GITHUB_TOKEN}@github.com/JJ-Pineda/rnaseq-assets.git
 
 # Build docker image and start up container
 docker build --tag rnaseq_image rnaseq-assets/docker_images/rnaseq/.
-docker run -d -t --name rnaseq rnaseq_image
+docker run -d -t -p 8080:8080 --name rnaseq rnaseq_image
 
 # Transfer necessary files to docker container
 docker cp rnaseq-assets/rnaseq_scripts/. rnaseq:/root/scripts/

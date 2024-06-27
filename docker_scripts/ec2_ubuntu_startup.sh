@@ -6,6 +6,8 @@ GITHUB_TOKEN=$1
 AWS_ACCESS_KEY=$2
 AWS_SECRET_KEY=$3
 
+SECONDS=0
+
 # Install docker
 cd
 apt update
@@ -24,4 +26,6 @@ docker cp rnaseq-assets/rnaseq_scripts/. rnaseq:/root/scripts/
 mkdir .aws
 echo "[default]\naws_access_key_id = ${AWS_ACCESS_KEY}\naws_secret_access_key = ${AWS_SECRET_KEY}" > .aws/credentials
 docker cp .aws rnaseq:/root/
-echo "Set-up is complete"
+
+duration=$SECONDS
+echo "Set-up is complete after ~$(($duration / 60)) minutes"

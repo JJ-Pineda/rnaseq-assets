@@ -59,4 +59,4 @@ RUN wget -nv https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip && \
     mv awscli-exe-linux-x86_64.zip awscliv2.zip && \
     unzip awscliv2.zip && \
     ./aws/install && \
-    rm awscliv2.zip
+    rm -rf awscliv2.zip aws

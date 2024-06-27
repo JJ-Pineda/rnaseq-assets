@@ -23,5 +23,5 @@ docker run -d -t --name rnaseq rnaseq_image
 docker cp rnaseq-assets/rnaseq_scripts/. rnaseq:/root/scripts/
 mkdir .aws
 echo "[default]\naws_access_key_id = ${AWS_ACCESS_KEY}\naws_secret_access_key = ${AWS_SECRET_KEY}" > .aws/credentials
-docker cp .aws/credentials rnaseq:/root/.aws/
+docker cp .aws rnaseq:/root/
 echo "Set-up is complete"

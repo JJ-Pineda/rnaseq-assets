@@ -52,7 +52,7 @@ WORKDIR /root
 RUN mkdir data scripts indexes
 
 WORKDIR /root/indexes
-RUN mkdir star xengsort salmon hisat2
+RUN mkdir star xengsort salmon
 
 WORKDIR /root
 RUN wget -nv https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip && \

@@ -13,7 +13,7 @@ RUN apt update && \
         salmon \
         rsem \
         subread \
-        ca-certificates wget tar pigz
+        ca-certificates wget tar pigz unzip
 
 RUN wget -nv https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
     bash Miniconda3-latest-Linux-x86_64.sh -b && \
@@ -55,3 +55,7 @@ WORKDIR /root/indexes
 RUN mkdir star xengsort salmon hisat2
 
 WORKDIR /root
+RUN wget -nv https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip && \
+    mv awscli-exe-linux-x86_64.zip awscliv2.zip && \
+    unzip awscliv2.zip && \
+    ./aws/install

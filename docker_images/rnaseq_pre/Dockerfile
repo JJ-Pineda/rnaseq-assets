@@ -13,7 +13,7 @@ RUN apt update && \
         salmon \
         rsem \
         subread \
-        ca-certificates wget tar pigz unzip openssh-server
+        ca-certificates wget tar pigz unzip
 
 RUN wget -nv https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
     bash Miniconda3-latest-Linux-x86_64.sh -b && \
@@ -60,9 +60,3 @@ RUN wget -nv https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip && \
     unzip awscliv2.zip && \
     ./aws/install && \
     rm -rf awscliv2.zip aws
-
-RUN mkdir /var/run/sshd
-RUN echo 'root:passw0rd' | chpasswd
-RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-EXPOSE 8080
-CMD ["/usr/sbin/sshd", "-D"]

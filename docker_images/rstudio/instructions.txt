@@ -1,0 +1,3 @@
+# Using a pre-built stable RStudio docker image
+# Run the following in the terminal:
+docker run -it -e PASSWORD=password -p 8787:8787 rocker/rstudio

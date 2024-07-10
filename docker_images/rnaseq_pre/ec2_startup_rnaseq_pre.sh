@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Note: this script must be run with "sudo ./ec2_startup_rnaseq_pre.sh <github access token>"
+# Note: this script must be run with:
+# "sudo ./ec2_startup_rnaseq_pre.sh <github access token> <AWS access key> <AWS secret key>"
 # Fine-grained (read-only access) token for private rnaseq-assets repo
 GITHUB_TOKEN=$1
 AWS_ACCESS_KEY=$2

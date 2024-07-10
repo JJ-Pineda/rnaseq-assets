@@ -1,9 +1,8 @@
-FROM --platform=linux/amd64 ubuntu:latest
+FROM --platform=linux/amd64 rocker/rstudio
+USER root
 
 RUN apt update && \
     apt install -y --no-install-recommends \
-        r-base \
-        r-base-dev \
         wget \
         unzip
 
@@ -13,3 +12,5 @@ RUN wget -nv https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip && \
     unzip awscliv2.zip && \
     ./aws/install && \
     rm -rf awscliv2.zip aws
+
+ENV PASSWORD=passw0rd

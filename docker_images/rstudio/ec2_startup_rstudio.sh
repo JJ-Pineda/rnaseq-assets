@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Note: this script must be run with "sudo ./ec2_startup_rnaseq_pro.sh <github access token>"
+# Note: this script must be run with:
+# "sudo ./ec2_startup_rstudio.sh <github access token> <AWS access key> <AWS secret key>"
 # Fine-grained (read-only access) token for private rnaseq-assets repo
 GITHUB_TOKEN=$1
 AWS_ACCESS_KEY=$2
@@ -18,13 +19,13 @@ systemctl start docker
 git clone "https://oauth2:${GITHUB_TOKEN}@github.com/JJ-Pineda/rnaseq-assets.git"
 
 # Build docker image and start up container
-docker build --tag rnaseq_pro_image rnaseq-assets/docker_images/rnaseq_pro/.
-docker run -d -t -p 8080:8080 --name rnaseq_pro rnaseq_pro_image
+docker build --tag rstudio_image rnaseq-assets/docker_images/rstudio/.
+docker run -d -t -p 8787:8787 --name rstudio rstudio_image
 
-# Transfer aws credentials to docker container
+# Transfer necessary files to docker container
 mkdir .aws
 echo "[default]\naws_access_key_id = ${AWS_ACCESS_KEY}\naws_secret_access_key = ${AWS_SECRET_KEY}" > .aws/credentials
-docker cp .aws rnaseq_pro:/root/
+docker cp .aws rstudio:/root/
 
 duration=$SECONDS
 echo "Set-up is complete after ~$(($duration / 60)) minutes"

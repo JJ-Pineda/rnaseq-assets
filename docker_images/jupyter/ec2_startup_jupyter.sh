@@ -24,9 +24,9 @@ then
   fi
 
   # Mount the volume
-  mkdir /root/data
-  mount /dev/xvdf /root/data
-  chmod 777 /root/data
+  mkdir ~/data
+  mount /dev/xvdf ~/data
+  chmod 777 ~/data
 fi
 
 # Install docker
@@ -40,7 +40,7 @@ git clone "https://oauth2:${GITHUB_TOKEN}@github.com/JJ-Pineda/rnaseq-assets.git
 
 # Build docker image and start up container
 docker build --tag jupyter_image rnaseq-assets/docker_images/jupyter/.
-docker run -d -t -v /root/data:/home/jovyan/data -p 8888:8888 --name jupyter jupyter_image
+docker run -d -t -v ~/data:/home/jovyan/data -p 8888:8888 --name jupyter jupyter_image
 
 # Transfer necessary files to docker container
 mkdir .aws

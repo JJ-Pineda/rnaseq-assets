@@ -24,9 +24,9 @@ then
   fi
 
   # Mount the volume
-  mkdir /root/data
-  mount /dev/xvdf /root/data
-  chmod 777 /root/data
+  mkdir ~/data
+  mount /dev/xvdf ~/data
+  chmod 777 ~/data
 fi
 
 # Install docker
@@ -40,7 +40,7 @@ git clone "https://oauth2:${GITHUB_TOKEN}@github.com/JJ-Pineda/rnaseq-assets.git
 
 # Build docker image and start up container
 docker build --tag rstudio_image rnaseq-assets/docker_images/rstudio/.
-docker run -d -t -p 8787:8787 --name rstudio rstudio_image
+docker run -d -t -p -v ~/data:/root/data 8787:8787 --name rstudio rstudio_image
 
 # Transfer necessary files to docker container
 mkdir .aws

@@ -49,7 +49,7 @@ RUN unzip -d bbmap bbmap.jar
 ENV PATH="/usr/share/bbmap:$PATH"
 
 WORKDIR /root
-RUN mkdir data scripts indexes
+RUN mkdir scripts indexes
 
 WORKDIR /root/indexes
 RUN mkdir star xengsort salmon

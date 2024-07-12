@@ -9,6 +9,26 @@ AWS_SECRET_KEY=$3
 
 SECONDS=0
 
+# First check for attached volume and mount if present
+BLOCKS=$(lsblk -o NAME -n)
+if [[ $BLOCKS == *"xvdf"* ]]
+then
+  # Open access to everybody
+  chmod 777 /dev/xvdf
+
+  # Build file system if needed (i.e. if we're using a brand new volume)
+  FS_CHECK=$(file -s /dev/xvdf)
+  if [[ $FS_CHECK != *"XFS filesystem"* ]]
+  then
+    mkfs -t xfs /dev/xvdf
+  fi
+
+  # Mount the volume
+  mkdir /root/data
+  mount /dev/xvdf /root/data
+  chmod 777 /root/data
+fi
+
 # Install docker
 cd
 apt update
@@ -20,7 +40,7 @@ git clone "https://oauth2:${GITHUB_TOKEN}@github.com/JJ-Pineda/rnaseq-assets.git
 
 # Build docker image and start up container
 docker build --tag jupyter_image rnaseq-assets/docker_images/jupyter/.
-docker run -d -t -p 8888:8888 --name jupyter jupyter_image
+docker run -d -t -v /root/data:/home/jovyan/data -p 8888:8888 --name jupyter jupyter_image
 
 # Transfer necessary files to docker container
 mkdir .aws

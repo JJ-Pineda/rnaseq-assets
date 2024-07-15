@@ -43,9 +43,9 @@ docker build --tag jupyter_image rnaseq-assets/docker_images/jupyter/.
 docker run -d -t -v ~/data:/home/jovyan/data -p 8888:8888 --name jupyter jupyter_image
 
 # Transfer necessary files to docker container
-mkdir .aws
+mkdir /home/ubuntu/.aws
 echo "[default]\naws_access_key_id = ${AWS_ACCESS_KEY}\naws_secret_access_key = ${AWS_SECRET_KEY}" > .aws/credentials
-docker cp .aws jupyter:/home/jovyan/
+docker cp /home/ubuntu/.aws jupyter:/home/jovyan/
 
 # Get localhost url to Jupyter notebook
 TOKEN=$(docker exec jupyter jupyter notebook list | grep -o 'token=[a-z0-9]\+')

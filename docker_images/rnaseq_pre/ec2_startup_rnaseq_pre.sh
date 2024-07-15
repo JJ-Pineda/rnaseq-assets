@@ -44,9 +44,9 @@ docker run -d -t -v ~/data:/root/data -p 8080:8080 --name rnaseq_pre rnaseq_pre_
 
 # Transfer necessary files to docker container
 docker cp rnaseq-assets/rnaseq_scripts/. rnaseq:/root/scripts/
-mkdir .aws
+mkdir /home/ubuntu/.aws
 echo "[default]\naws_access_key_id = ${AWS_ACCESS_KEY}\naws_secret_access_key = ${AWS_SECRET_KEY}" > .aws/credentials
-docker cp .aws rnaseq_pre:/root/
+docker cp /home/ubuntu/.aws rnaseq_pre:/root/
 
 duration=$SECONDS
 echo "Set-up is complete after ~$(($duration / 60)) minutes"

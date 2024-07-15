@@ -43,9 +43,9 @@ docker build --tag rstudio_image rnaseq-assets/docker_images/rstudio/.
 docker run -d -t -p -v ~/data:/root/data 8787:8787 --name rstudio rstudio_image
 
 # Transfer necessary files to docker container
-mkdir .aws
+mkdir /home/ubuntu/.aws
 echo "[default]\naws_access_key_id = ${AWS_ACCESS_KEY}\naws_secret_access_key = ${AWS_SECRET_KEY}" > .aws/credentials
-docker cp .aws rstudio:/root/
+docker cp /home/ubuntu/.aws rstudio:/root/
 
 duration=$SECONDS
 echo "Set-up is complete after ~$(($duration / 60)) minutes"

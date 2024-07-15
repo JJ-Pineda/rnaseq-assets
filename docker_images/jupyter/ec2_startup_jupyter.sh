@@ -24,9 +24,9 @@ then
   fi
 
   # Mount the volume
-  mkdir ~/data
-  mount /dev/xvdf ~/data
-  chmod 777 ~/data
+  mkdir /home/ubuntu/data
+  mount /dev/xvdf /home/ubuntu/data
+  chmod 777 /home/ubuntu/data
 fi
 
 # Install docker

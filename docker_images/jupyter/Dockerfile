@@ -8,3 +8,6 @@ RUN wget -nv https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip && \
     unzip awscliv2.zip && \
     ./aws/install && \
     rm -rf awscliv2.zip aws
+
+RUN mkdir /home/jovyan/javier
+WORKDIR /home/jovyan/javier

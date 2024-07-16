@@ -18,7 +18,7 @@ fi
 
 if [ -z "$ENSEMBL_DIR" ]
 then
-  ENSEMBL_DIR="/root/ensembl_references/grch38"
+  ENSEMBL_DIR="/root/javier/ensembl_references/grch38"
 fi
 
 ANNOTATION=$(ls ${ENSEMBL_DIR}/*gtf.gz)

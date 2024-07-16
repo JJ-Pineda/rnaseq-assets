@@ -20,7 +20,7 @@ fi
 
 SECONDS=0
 
-REF_DIR="/root/ensembl_references/grch38"
+REF_DIR="/root/javier/ensembl_references/grch38"
 ASSEMBLY=$(ls ${REF_DIR}/*primary_assembly.fa.gz)
 ANNOTATION=$(ls ${REF_DIR}/*gtf.gz)
 ARRIBA_PATH=$(echo "$(type -p arriba)" | sed -r "s/\/arriba$//g")

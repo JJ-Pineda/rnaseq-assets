@@ -13,4 +13,7 @@ RUN wget -nv https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip && \
     ./aws/install && \
     rm -rf awscliv2.zip aws
 
+RUN mkdir /root/javier
+WORKDIR /root/javier
+
 ENV PASSWORD=passw0rd

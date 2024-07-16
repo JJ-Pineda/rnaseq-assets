@@ -12,7 +12,7 @@ then
   ENSEMBL_RELEASE=112
 fi
 
-cd /root
+cd /root/javier
 mkdir -p ensembl_references
 cd ensembl_references
 

@@ -6,7 +6,7 @@ set -e -u
 
 GENOME=$1
 
-cd /root
+cd /root/javier
 mkdir -p gencode_references
 cd gencode_references
 

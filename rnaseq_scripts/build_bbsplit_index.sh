@@ -11,9 +11,9 @@ SECONDS=0
 
 # For reference: https://github.com/BioInfoTools/BBMap/blob/master/sh/bbsplit.sh
 # Path to ENSEMBL files
-HUMAN_PATH=/root/ensembl_references/grch38
-MOUSE_PATH=/root/ensembl_references/grcm39
-INDEX_PATH=/root/indexes/bbsplit/grch38_grcm39
+HUMAN_PATH=/root/javier/ensembl_references/grch38
+MOUSE_PATH=/root/javier/ensembl_references/grcm39
+INDEX_PATH=/root/javier/indexes/bbsplit/grch38_grcm39
 
 # Build the directory if it doesn't exist
 mkdir -p "$INDEX_PATH"

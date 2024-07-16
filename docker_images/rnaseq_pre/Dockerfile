@@ -49,9 +49,12 @@ RUN unzip -d bbmap bbmap.jar
 ENV PATH="/usr/share/bbmap:$PATH"
 
 WORKDIR /root
+RUN mkdir javier
+
+WORKDIR /root/javier
 RUN mkdir scripts indexes
 
-WORKDIR /root/indexes
+WORKDIR /root/javier/indexes
 RUN mkdir star xengsort salmon
 
 WORKDIR /root
@@ -60,3 +63,5 @@ RUN wget -nv https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip && \
     unzip awscliv2.zip && \
     ./aws/install && \
     rm -rf awscliv2.zip aws
+
+WORKDIR /root/javier

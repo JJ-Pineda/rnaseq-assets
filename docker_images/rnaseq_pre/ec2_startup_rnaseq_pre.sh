@@ -24,9 +24,9 @@ then
   fi
 
   # Mount the volume
-  mkdir /home/ubuntu/data
-  mount /dev/xvdf /home/ubuntu/data
-  chmod 777 /home/ubuntu/data
+  mkdir /home/ubuntu/javier
+  mount /dev/xvdf /home/ubuntu/javier
+  chmod 777 /home/ubuntu/javier
 fi
 
 # Install docker
@@ -40,15 +40,15 @@ git clone "https://oauth2:${GITHUB_TOKEN}@github.com/JJ-Pineda/rnaseq-assets.git
 
 # Build docker image and start up container
 docker build --tag rnaseq_pre_image rnaseq-assets/docker_images/rnaseq_pre/.
-docker run -d -t -v /home/ubuntu/data:/root/data -p 8080:8080 --name rnaseq_pre rnaseq_pre_image
+docker run -d -t -v /home/ubuntu/javier:/root/javier -p 8080:8080 --name rnaseq_pre rnaseq_pre_image
 
 # Give the container time to boot up before moving onward
 sleep 10
 
 # Transfer necessary files to docker container
-docker cp rnaseq-assets/rnaseq_scripts/. rnaseq:/root/scripts/
+docker cp rnaseq-assets/rnaseq_scripts/. rnaseq:/root/javier/scripts/
 mkdir /home/ubuntu/.aws
-echo "[default]\naws_access_key_id = ${AWS_ACCESS_KEY}\naws_secret_access_key = ${AWS_SECRET_KEY}" > .aws/credentials
+echo "[default]\naws_access_key_id = ${AWS_ACCESS_KEY}\naws_secret_access_key = ${AWS_SECRET_KEY}" > /home/ubuntu/.aws/credentials
 docker cp /home/ubuntu/.aws rnaseq_pre:/root/
 
 duration=$SECONDS

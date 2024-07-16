@@ -24,9 +24,9 @@ then
   fi
 
   # Mount the volume
-  mkdir /home/ubuntu/data
-  mount /dev/xvdf /home/ubuntu/data
-  chmod 777 /home/ubuntu/data
+  mkdir /home/ubuntu/javier
+  mount /dev/xvdf /home/ubuntu/javier
+  chmod 777 /home/ubuntu/javier
 fi
 
 # Install docker
@@ -40,14 +40,14 @@ git clone "https://oauth2:${GITHUB_TOKEN}@github.com/JJ-Pineda/rnaseq-assets.git
 
 # Build docker image and start up container
 docker build --tag jupyter_image rnaseq-assets/docker_images/jupyter/.
-docker run -d -t -v /home/ubuntu/data:/home/jovyan/data -p 8888:8888 --name jupyter jupyter_image
+docker run -d -t -v /home/ubuntu/javier:/home/jovyan/javier -p 8888:8888 --name jupyter jupyter_image
 
 # Give the container time to boot up before moving onward
 sleep 10
 
 # Transfer necessary files to docker container
 mkdir /home/ubuntu/.aws
-echo "[default]\naws_access_key_id = ${AWS_ACCESS_KEY}\naws_secret_access_key = ${AWS_SECRET_KEY}" > .aws/credentials
+echo "[default]\naws_access_key_id = ${AWS_ACCESS_KEY}\naws_secret_access_key = ${AWS_SECRET_KEY}" > /home/ubuntu/.aws/credentials
 docker cp /home/ubuntu/.aws jupyter:/home/jovyan/
 
 # Get localhost url to Jupyter notebook

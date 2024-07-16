@@ -17,7 +17,7 @@ METHOD=$4
 SECONDS=0
 
 # For reference: https://github.com/BioInfoTools/BBMap/blob/master/sh/bbsplit.sh
-INDEX_PATH=/root/indexes/bbsplit/grch38_grcm39
+INDEX_PATH=/root/javier/indexes/bbsplit/grch38_grcm39
 
 mkdir -p "$INDEX_PATH"
 

@@ -21,7 +21,7 @@ else
 fi
 
 salmon quant \
-  --index="/root/indexes/grch38" \
+  --index="/root/javier/indexes/grch38" \
   --threads 12 \
   --libType A \
   --incompatPrior 0.0 \

@@ -40,7 +40,7 @@ git clone "https://oauth2:${GITHUB_TOKEN}@github.com/JJ-Pineda/rnaseq-assets.git
 
 # Build docker image and start up container
 docker build --tag rnaseq_pre_image rnaseq-assets/docker_images/rnaseq_pre/.
-docker run -d -t -v /home/ubuntu/javier:/root/javier -p 8080:8080 --name rnaseq_pre rnaseq_pre_image
+docker run -d -t -v /home/ubuntu/javier:/root/javier --name rnaseq_pre rnaseq_pre_image
 
 # Give the container time to boot up before moving onward
 sleep 10

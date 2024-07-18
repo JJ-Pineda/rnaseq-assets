@@ -23,7 +23,7 @@ FASTQ_FILES=$(echo $FASTQ_FILES)
 # Benchmark: 8 threads --> ~7 minutes to process 8 PDMR fastq files (i.e. 4 paired-end sets)
 fastqc $FASTQ_FILES -t 8 -o "${OUTPUT_FOLDER}/"
 
-multiqc ./ -o ./
+multiqc "${OUTPUT_FOLDER}/" -o "${OUTPUT_FOLDER}/"
  
 duration=$SECONDS
 echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

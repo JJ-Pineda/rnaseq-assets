@@ -40,7 +40,7 @@ git clone "https://oauth2:${GITHUB_TOKEN}@github.com/JJ-Pineda/rnaseq-assets.git
 
 # Build docker image and start up container
 docker build --tag rstudio_image rnaseq-assets/docker_images/rstudio/.
-docker run -d -t -p -v /home/ubuntu/javier:/root/javier 8787:8787 --name rstudio rstudio_image
+docker run -d -t -v /home/ubuntu/javier:/root/javier -p 8787:8787 --name rstudio rstudio_image
 
 # Give the container time to boot up before moving onward
 sleep 10

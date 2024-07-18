@@ -47,7 +47,7 @@ sleep 10
 
 # Transfer necessary files to docker container
 docker exec rnaseq_pre mkdir /root/javier/scripts
-docker cp rnaseq-assets/rnaseq_scripts/. rnaseq:/root/javier/scripts/
+docker cp /home/ubuntu/rnaseq-assets/rnaseq_scripts/. rnaseq:/root/javier/scripts/
 mkdir /home/ubuntu/.aws
 echo "[default]\naws_access_key_id = ${AWS_ACCESS_KEY}\naws_secret_access_key = ${AWS_SECRET_KEY}" > /home/ubuntu/.aws/credentials
 docker cp /home/ubuntu/.aws rnaseq_pre:/root/

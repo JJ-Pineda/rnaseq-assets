@@ -51,13 +51,6 @@ ENV PATH="/usr/share/bbmap:$PATH"
 WORKDIR /root
 RUN mkdir javier
 
-WORKDIR /root/javier
-RUN mkdir scripts indexes
-
-WORKDIR /root/javier/indexes
-RUN mkdir star xengsort salmon
-
-WORKDIR /root
 RUN wget -nv https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip && \
     mv awscli-exe-linux-x86_64.zip awscliv2.zip && \
     unzip awscliv2.zip && \

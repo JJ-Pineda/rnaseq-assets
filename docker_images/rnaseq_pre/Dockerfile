@@ -26,6 +26,8 @@ RUN wget -nv https://gitlab.com/genomeinformatics/xengsort/-/archive/2.0.5/xengs
     rm xengsort-2.0.5.tar.gz
 
 WORKDIR xengsort-2.0.5
+RUN sed -i 's/numpy>=1.24/numpy>=1.24,<2.0/g' environment.yml
+
 RUN conda init bash && \
     . ~/.bashrc && \
     conda env create && \

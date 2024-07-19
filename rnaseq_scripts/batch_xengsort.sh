@@ -5,7 +5,7 @@ set -o pipefail
 set -e -u
 
 # Note: method should be either "g" for genome (i.e. default), or "t" for transcriptome
-# If using Salmon downstream, "t" should be used whereas "g" should be used otherwise
+# If using Salmon downstream, "t" can be used whereas "g" should be used otherwise
 # The genome based method should especially be used if you care about novel transcripts or gene fusions
 # For WES, "g" must be used
 FASTQ_DIR=$1
@@ -16,7 +16,7 @@ METHOD=$5
 
 SECONDS=0
 
-INDEX_PATH=/root/indexes/xengsort/grch38_grcm39
+INDEX_PATH=/root/javier/indexes/xengsort/grch38_grcm39
 if [ -z "$METHOD" ] || [ $METHOD = "g" ]
 then
   METHOD="g"

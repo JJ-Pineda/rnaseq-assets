@@ -47,7 +47,7 @@ sleep 10
 
 # Transfer necessary files to docker container
 mkdir /home/ubuntu/.aws
-echo "[default]\naws_access_key_id = ${AWS_ACCESS_KEY}\naws_secret_access_key = ${AWS_SECRET_KEY}" > /home/ubuntu/.aws/credentials
+echo -e "[default]\naws_access_key_id = ${AWS_ACCESS_KEY}\naws_secret_access_key = ${AWS_SECRET_KEY}" > /home/ubuntu/.aws/credentials
 docker cp /home/ubuntu/.aws jupyter:/home/jovyan/
 
 # Get localhost url to Jupyter notebook

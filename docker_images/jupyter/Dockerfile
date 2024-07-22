@@ -14,6 +14,9 @@ RUN chown jovyan -R /home/jovyan
 
 USER jovyan
 
+# # If additional Python environments are desired, run the following block
+# # Also, pip install anything you want when the new environments is activated, or
+# # Use "conda run -n my-new-python-env pip install <package>" if it's not activated
 #RUN conda create -n my-new-python-env python=3.9 -y && \
 #    source activate my-new-python-env && \
 #    conda install ipykernel && \

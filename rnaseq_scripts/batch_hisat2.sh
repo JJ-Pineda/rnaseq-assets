@@ -31,10 +31,15 @@ cd "$FASTQ_DIR"
 mkdir -p hisat2
 
 READ1_FILES=$(ls *$READ1_SUFFIX)
+
+# Initiate new log file
+echo -n > batch_hisat2.log
+
 for f in $READ1_FILES
 do
   BASE_NAME="${f//$READ1_SUFFIX/}"
-  echo "Processing reads for $BASE_NAME"
+
+  echo "Processing reads for $BASE_NAME" >> batch_hisat2.log
 
   # Check for paired-end files and decompress
   if [ -z "$READ2_SUFFIX" ]
@@ -48,6 +53,8 @@ do
   hisat2 -q -p 8 $STRANDNESS_ARG -x "$HISAT2_INDEX" $READ_ARGUMENT --dta |
   sambamba view --sam-input --format bam --compression-level=0 /dev/stdin |
   sambamba sort -t 8 -o "${FASTQ_DIR}/hisat2/${BASE_NAME}_Sorted.bam" /dev/stdin
+
+  echo "Finished processing reads for $BASE_NAME" >> batch_hisat2.log
 
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

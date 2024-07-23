@@ -29,11 +29,14 @@ else
   exit 1
 fi
 
+# Initiate new log file
+echo -n > batch_bbduk.log
+
 for f in $READ1_FILES
 do
   BASE_NAME="${f//$READ1_SUFFIX/}"
 
-  echo "Trimming reads for $BASE_NAME"
+  echo "Trimming reads for $BASE_NAME" >> batch_bbduk.log
 
   # Check if variable is empty
   if [ -z "$READ2_SUFFIX" ]
@@ -55,6 +58,8 @@ do
     # For paired-end reads, add "tpe tbo" arguments to trim the mates consistently
     bbduk.sh -Xmx4g threads=12 in1=$IN_NAME1 in2=$IN_NAME2 out1=$OUT_NAME1 out2=$OUT_NAME2 ref=$REF_PATH ktrim=rl k=23 mink=11 hdist=1 $QTRIM_ARGS tpe tbo
   fi
+
+  echo "Finished trimming reads for $BASE_NAME" >> batch_bbduk.log
 
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

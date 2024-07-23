@@ -38,10 +38,13 @@ fi
 cd "$FASTQ_DIR"
 READ1_FILES=$(ls *$READ1_SUFFIX)
 
+# Initiate new log file
+echo -n > batch_bbsplit.log
+
 for f in $READ1_FILES
 do
   BASE_NAME="${f//$READ1_SUFFIX/}"
-  echo "Splitting reads for $BASE_NAME"
+  echo "Splitting reads for $BASE_NAME" >> batch_bbsplit.log
 
   # Check if variable is empty
   if [ -z "$READ2_SUFFIX" ]
@@ -76,6 +79,8 @@ do
       basename="${BASE_NAME}_%_#.fastq.gz" \
       refstats="${BASE_NAME}_stat.txt"
   fi
+
+  echo "Finished splitting reads for $BASE_NAME" >> batch_bbsplit.log
 
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

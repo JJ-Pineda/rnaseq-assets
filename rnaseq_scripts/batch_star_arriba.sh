@@ -47,10 +47,13 @@ echo "Will use \"--twopassMode None\" for STAR alignment"
 
 READ1_FILES=$(ls *$READ1_SUFFIX)
 
+echo -n > batch_star_arriba.log
+
 for f in $READ1_FILES
 do
   BASE_NAME="${f//$READ1_SUFFIX/}"
-  echo "Processing reads for $BASE_NAME"
+
+  echo "Processing reads for $BASE_NAME" >> batch_star_arriba.log
 
   # Check for paired-end file
   if [ -z "$READ2_SUFFIX" ]
@@ -98,7 +101,7 @@ do
 	  -p "$PROTEIN_DOMAINS_GFF3"
 
   # Filter and sort BAM file
-  echo "Filtering and sorting transcriptomics coordinate BAM file"
+  echo "Filtering and sorting transcriptomics coordinate BAM file" >> batch_star_arriba.log
   if [ -z "$READ2_SUFFIX" ]
   then
     sambamba view -F "not chimeric" -f bam --compression-level=0 "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam" |
@@ -111,6 +114,8 @@ do
     ) | sambamba view --sam-input -f bam -o "${STAR_OUT_DIR}/${BASE_NAME}_Filtered_Sorted.toTranscriptome.out.bam" /dev/stdin
   fi
   rm "${STAR_OUT_DIR}/${BASE_NAME}_Aligned.toTranscriptome.out.bam"
+
+  echo "Finished processing reads for $BASE_NAME" >> batch_star_arriba.log
 
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

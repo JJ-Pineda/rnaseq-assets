@@ -33,10 +33,12 @@ fi
 cd "$FASTQ_DIR"
 READ1_FILES=$(ls *$READ1_SUFFIX)
 
+echo -n > batch_xengsort.log
+
 for f in $READ1_FILES
 do
   BASE_NAME="${f//$READ1_SUFFIX/}"
-  echo "Splitting reads for $BASE_NAME"
+  echo "Splitting reads for $BASE_NAME" >> batch_xengsort.log
 
   if [ $FILE_EXTENSION != "fq.gz" ]
   then
@@ -95,6 +97,8 @@ do
 
   # At this point, remove all remaining intermediate files from xengsort
   rm -f "${BASE_NAME}-graft."* "${BASE_NAME}-both."* "${BASE_NAME}-neither."*
+
+  echo "Finished splitting reads for $BASE_NAME" >> batch_xengsort.log
 
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

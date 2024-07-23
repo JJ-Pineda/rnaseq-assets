@@ -45,10 +45,12 @@ gunzip -k $RSEM_REF_DIR/*fa.gz
 cd "$BAM_DIR"
 BAM_FILES=$(ls *$BAM_SUFFIX)
 
+echo -n > batch_rsem.log
+
 for f in $BAM_FILES
 do
   BASE_NAME="${f//$BAM_SUFFIX/}"
-  echo "Running quantification for $BASE_NAME"
+  echo "Quantifying reads for $BASE_NAME" >> batch_rsem.log
 
   # Benchmark: takes ~56 minutes when quantifying a PDMR paired-end BAM file using 8 threads
   rsem-calculate-expression \
@@ -60,6 +62,8 @@ do
 	"$f" \
 	"${RSEM_REF_DIR}/rsem" \
 	"$BASE_NAME"
+
+  echo "Finished quantifying reads for $BASE_NAME" >> batch_rsem.log
 
   duration=$SECONDS
   echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds have elapsed."

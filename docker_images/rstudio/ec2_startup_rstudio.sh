@@ -40,7 +40,7 @@ git clone "https://oauth2:${GITHUB_TOKEN}@github.com/JJ-Pineda/rnaseq-assets.git
 
 # Build docker image and start up container
 docker build --tag rstudio_image rnaseq-assets/docker_images/rstudio/.
-docker run -d -t -v /home/ubuntu/javier:/root/javier -p 8787:8787 --name rstudio rstudio_image
+docker run -d -t -v /home/ubuntu/javier:/home/rstudio/javier -p 8787:8787 --name rstudio rstudio_image
 
 # Give the container time to boot up before moving onward
 sleep 10
@@ -48,7 +48,7 @@ sleep 10
 # Transfer necessary files to docker container
 mkdir /home/ubuntu/.aws
 echo "[default]\naws_access_key_id = ${AWS_ACCESS_KEY}\naws_secret_access_key = ${AWS_SECRET_KEY}" > /home/ubuntu/.aws/credentials
-docker cp /home/ubuntu/.aws rstudio:/root/
+docker cp /home/ubuntu/.aws rstudio:/home/rstudio/
 
 duration=$SECONDS
 echo "Set-up is complete after ~$(($duration / 60)) minutes"

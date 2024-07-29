@@ -1,6 +1,16 @@
 FROM rocker/rstudio
 
-RUN apt update && apt install -y --no-install-recommends wget unzip
+# Extra packages necessary for proper Bioconductor functionality
+RUN apt update && apt install -y --no-install-recommends \
+    zlib1g-dev liblzma-dev libbz2-dev libxml2-dev libpng-dev
+
+# Install Bioconductor package manager
+RUN Rscript -e 'install.packages("BiocManager", lib="/usr/local/lib/R/site-library", repos="https://cloud.r-project.org")'
+
+RUN Rscript -e 'BiocManager::install(c("Biobase", "AnnotationHub", "DESeq2", "DEXSeq"), lib="/usr/local/lib/R/site-library")'
+
+# Install AWS CLI
+RUN apt install -y --no-install-recommends wget unzip
 
 RUN if [ $(dpkg --print-architecture) = "amd64" ]; then \
          wget -nv https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip && \

@@ -1,7 +1,12 @@
-# The following R code loads in the Ensembl v112 human annotation
-library(c("AnnotationHub", "DESeq2", "BiocParallel"))
+# Load packages
+library("AnnotationHub")
+library("tximport")
+library("DESeq2")
+library("BiocParallel")
 register(MulticoreParam(4))  # Use 4 cores for parallelization
-ah <- AnnotationHub() # Type "yes" when asked to create directory
+
+# The following R code loads in the Ensembl v112 human annotation
+ah <- AnnotationHub(ask = FALSE)  # if "ask = TRUE" (i.e. default), type "yes" when asked to create directory
 ahResults <- query(ah, c("Annotation", "EnsDb", "Homo sapiens", "112"))
 ensDbHuman112 <- ahResults[[1]]  # Retrieves the resource
 k <- keys(ensDbHuman112, keytype = "TXNAME")
@@ -14,19 +19,29 @@ files <- file.path(data_dir, salmon_dirs, "quant.sf")
 names(files) <- salmon_dirs  # Enables proper sample labeling for the tximport output
 txi <- tximport(files, type = "salmon", tx2gene = tx2gene, ignoreTxVersion = TRUE)
 
+# Record gene counts as a single dataframe
+txi_path <- file.path(data_dir, "salmon_gene_counts.csv")
+txi_counts <- as.data.frame(txi$counts)
+write.csv(txi_counts, file = txi_path, row.names = TRUE, col.names = TRUE)
+
 # Run DESeq2
 sample_df <- data.frame(sample = salmon_dirs)
-conditions <- factor(rep(c("Colon", "Melanoma"), each=3))  # Should correspond to "sample_df"
+conditions <- factor(rep(c("Colon", "Control"), each=3))  # Should correspond to "sample_df"
+conditions <- relevel(conditions, ref = "Control")  # Sets the reference "level"
 sample_df <- cbind(sample_df, condition = conditions)
 rownames(sample_df) <- sample_df$sample
 dds <- DESeqDataSetFromTximport(txi, colData = sample_df, design = ~ condition)
-dds$condition <- relevel(dds$condition, ref = "Melanoma")  # Sets the reference "level" of the condition factor
 smallestGroupSize <- 3
-keep <- rowSums(counts(dds) >= 10) >= smallestGroupSize    # Keep rows that have >=10 counts in >=3 samples
+keep <- rowSums(counts(dds) >= 10) >= smallestGroupSize  # Keep rows that have >=10 counts in >=3 samples
 dds <- dds[keep,]
 dds <- DESeq(dds, parallel = TRUE)  # Actually runs DESeq2 (with parallelization)
-res <- results(dds, name="condition_Colon_vs_Melanoma")    # Tells DESeq2 what comparison to make
+res <- results(dds, name="condition_Colon_vs_Control")  # Tells DESeq2 what comparison to make
+res_shrunk <- lfcShrink(dds, coef="condition_Colon_vs_Control", type="apeglm", parallel = TRUE)  # Shrink LFCs
 
-# Record results
+# Record raw LFC results
 output_path <- file.path(data_dir, "salmon_deseq2_results.csv")
-write.table(res, file = output_path, row.names = TRUE, col.names = TRUE)
+write.csv(res, file = output_path, row.names = TRUE, col.names = TRUE)
+
+# Record shrunk LFC results
+shrunk_output_path <- file.path(data_dir, "salmon_deseq2_results_shrunk.csv")
+write.csv(res_shrunk, file = shrunk_output_path, row.names = TRUE, col.names = TRUE)

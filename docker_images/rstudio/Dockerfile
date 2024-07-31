@@ -7,7 +7,7 @@ RUN apt update && apt install -y --no-install-recommends \
 # Install Bioconductor package manager
 RUN Rscript -e 'install.packages("BiocManager", lib="/usr/local/lib/R/site-library", repos="https://cloud.r-project.org")'
 
-RUN Rscript -e 'BiocManager::install(c("Biobase", "AnnotationHub", "ensembldb", "tximport", "DESeq2", "DEXSeq", "BiocParallel"), lib="/usr/local/lib/R/site-library", ask = FALSE)'
+RUN Rscript -e 'BiocManager::install(c("Biobase", "AnnotationHub", "ensembldb", "tximport", "DESeq2", "DEXSeq", "BiocParallel", "apeglm"), lib="/usr/local/lib/R/site-library", ask = FALSE)'
 
 # Install AWS CLI
 RUN apt install -y --no-install-recommends wget unzip

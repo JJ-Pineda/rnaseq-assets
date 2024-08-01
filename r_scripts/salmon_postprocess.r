@@ -1,19 +1,20 @@
 # Read input arguments (i.e. data directory and design matrix filename)
 args <- commandArgs(trailingOnly = TRUE)
+data_dir <- args[1]
+design_matrix_fname <- args[2]
 
 # Validate data directory
-data_dir <- args[1]
-salmon_dirs <- list.files(path = data_dir, pattern = "\\.salmon$")
-if (length(salmon_dirs) == 0) {
+all_salmon_dirs <- list.files(path = data_dir, pattern = "\\.salmon$")
+if (length(all_salmon_dirs) == 0) {
   print("No salmon directories detected using the specified data path...Exiting")
   quit(save = "no")
 }
 
 # Read in design matrix CSV
 # Expects "sample" (string), "condition" (string), and "reference" (boolean) columns
-design_matrix_fname <- args[2]
 design_matrix <- read.csv(file.path(data_dir, design_matrix_fname), stringsAsFactors = FALSE)
 rownames(design_matrix) <- design_matrix$sample
+relevant_salmon_dirs <- design_matrix$sample
 
 # Now load packages
 library("AnnotationHub")
@@ -29,8 +30,8 @@ k <- keys(ensDbHuman112, keytype = "TXNAME")
 tx2gene <- select(ensDbHuman112, k, "GENENAME", "TXNAME")
 
 # Perform transcript count aggregation with tximport and output gene counts
-files <- file.path(data_dir, salmon_dirs, "quant.sf")
-names(files) <- salmon_dirs  # Enables proper sample labeling for the tximport output
+files <- file.path(data_dir, relevant_salmon_dirs, "quant.sf")
+names(files) <- relevant_salmon_dirs  # Enables proper sample labeling for the tximport output
 txi <- tximport(files, type = "salmon", tx2gene = tx2gene, ignoreTxVersion = TRUE)
 txi_path <- file.path(data_dir, "salmon_gene_counts.csv")
 txi_counts <- as.data.frame(txi$counts)

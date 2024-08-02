@@ -19,6 +19,7 @@ relevant_salmon_dirs <- design_matrix$sample
 # Now load packages
 library("AnnotationHub")
 library("tximport")
+library("tibble")
 library("DESeq2")
 library("BiocParallel")
 
@@ -38,7 +39,8 @@ names(files) <- relevant_salmon_dirs  # Enables proper sample labeling for the t
 txi <- tximport(files, type = "salmon", tx2gene = tx2gene, ignoreTxVersion = TRUE)
 txi_path <- file.path(data_dir, "salmon_gene_counts.csv")
 txi_counts <- as.data.frame(txi$counts)
-write.csv(txi_counts, file = txi_path)
+txi_counts <- rownames_to_column(txi_counts, var = "GeneID")
+write.csv(txi_counts, file = txi_path, row.names = FALSE)
 
 # Gear up for DESeq2
 ref_condition = design_matrix[design_matrix$reference == TRUE, "condition"][1]

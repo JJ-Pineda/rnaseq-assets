@@ -39,7 +39,7 @@ names(files) <- relevant_salmon_dirs  # Enables proper sample labeling for the t
 txi <- tximport(files, type = "salmon", tx2gene = tx2gene, ignoreTxVersion = TRUE)
 txi_path <- file.path(data_dir, "salmon_gene_counts.csv")
 txi_counts <- as.data.frame(txi$counts)
-txi_counts <- rownames_to_column(txi_counts, var = "GeneID")
+txi_counts <- rownames_to_column(txi_counts, var = "gene_name")
 write.csv(txi_counts, file = txi_path, row.names = FALSE)
 
 # Gear up for DESeq2
@@ -73,6 +73,28 @@ for (cond in other_conditions) {
   res_fname <- paste0("salmon_deseq2_", cond, "_vs_", ref_condition, ".csv")
   res_shrunk_fname <- paste0("salmon_deseq2_", cond, "_vs_", ref_condition, "_shrunkLFC.csv")
 
-  write.csv(res, file = file.path(data_dir, res_fname))
-  write.csv(res, file = file.path(data_dir, res_shrunk_fname))
+  res <- rownames_to_column(as.data.frame(res), var = "gene_name")
+  res_shrunk <- rownames_to_column(as.data.frame(res_shrunk), var = "gene_name")
+
+  write.csv(res, file = file.path(data_dir, res_fname), row.names = FALSE)
+  write.csv(res, file = file.path(data_dir, res_shrunk_fname), row.names = FALSE)
 }
+
+# # To read in tximport CSV output and convert to DESeqDataSet
+# # Note: counts must have integer values
+# txi_counts <- read.csv(txi_path, check.names = FALSE)
+# rownames(txi_counts) <- txi_counts$gene_name
+# txi_counts <- subset(txi_counts, select = -gene_name)
+# numeric_cols <- sapply(txi_counts, is.numeric)
+# txi_counts[numeric_cols] <- lapply(txi_counts[numeric_cols], as.integer)
+#
+# dds <- DESeqDataSetFromMatrix(txi_counts, design_matrix, design = ~ condition)
+#
+# # To read in DESeq CSV output and convert to DESeqResult object
+# res_shrunk_df <- read.csv(file.path(data_dir, res_shrunk_fname), check.names = FALSE)
+# rownames(res_shrunk_df) <- res_shrunk_df$gene_name
+# res_shrunk_df <- subset(res_shrunk_df, select = -gene_name)
+# res_shrunk <- DESeqResults(res_shrunk_df)
+
+print("All done!")
+

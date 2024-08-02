@@ -22,6 +22,9 @@ library("tximport")
 library("DESeq2")
 library("BiocParallel")
 
+# Use 4 cores for any parallelization
+register(MulticoreParam(4))
+
 # Load in Ensembl v112 human annotation and build table for transcript/gene conversion
 ah <- AnnotationHub(ask = FALSE)  # if "ask = TRUE" (i.e. default), type "yes" when asked to create directory
 ahResults <- query(ah, c("Annotation", "EnsDb", "Homo sapiens", "112"))

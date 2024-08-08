@@ -2,12 +2,12 @@ FROM rocker/rstudio
 
 # Extra packages necessary for proper Bioconductor functionality
 RUN apt update && apt install -y --no-install-recommends \
-    zlib1g-dev liblzma-dev libbz2-dev libxml2-dev libpng-dev
+    zlib1g-dev liblzma-dev libbz2-dev libxml2-dev libpng-dev libgit2-dev libfontconfig1-dev
 
 # Install Bioconductor package manager
 RUN Rscript -e 'install.packages("BiocManager", lib="/usr/local/lib/R/site-library", repos="https://cloud.r-project.org")'
 
-RUN Rscript -e 'BiocManager::install(c("Biobase", "AnnotationHub", "ensembldb", "tximport", "DESeq2", "DEXSeq", "BiocParallel", "apeglm", "fgsea"), lib="/usr/local/lib/R/site-library", ask = FALSE)'
+RUN Rscript -e 'BiocManager::install(c("Biobase", "AnnotationHub", "ensembldb", "tximport", "DESeq2", "DEXSeq", "BiocParallel", "apeglm", "clusterProfiler", "org.Hs.eg.db"), lib="/usr/local/lib/R/site-library", ask = FALSE)'
 
 # Install AWS CLI
 RUN apt install -y --no-install-recommends wget unzip

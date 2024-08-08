@@ -95,6 +95,14 @@ for (cond in other_conditions) {
 # rownames(res_shrunk_df) <- res_shrunk_df$gene_name
 # res_shrunk_df <- subset(res_shrunk_df, select = -gene_name)
 # res_shrunk <- DESeqResults(res_shrunk_df)
+#
+# # To run GSEA
+# library("org.Hs.eg.db")
+# res_shrunk_df <- read.csv(file.path(data_dir, res_shrunk_fname), check.names = FALSE)
+# res_filt <- res_shrunk_df[!is.na(res_shrunk_df$log2FoldChange) & !is.na(res_shrunk_df$padj) & (res_shrunk_df$gene_name != ""),]
+# res_filt <- res_filt[order(-res$log2FoldChange),]
+# gene_list <- res_filt$log2FoldChange
+# names(gene_list) <- res_filt$gene_name
 
 print("All done!")
 
